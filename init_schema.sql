@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `topic`(
    `lvl` int NOT NULL,
    `subject` VARCHAR(25) NOT NULL,
    `units` FLOAT NOT NULL,
-   PRIMARY KEY(`topic_id`, `topic_name`),
+   PRIMARY KEY(`topic_id`, `topic_name`))
    ENGINE=InnoDB, DEFAULT CHARSET=latin1;
 
 -- Make or remake topic_curric relationship
@@ -77,8 +77,8 @@ CREATE TABLE IF NOT EXISTS `topic_curric`(
    `topic_id` int NOT NULL,
    `curric_assoc` VARCHAR(25) NOT NULL,
    PRIMARY KEY(`topic_id`),
-   FOREIGN KEY (`curric_assoc`) REFERENCES `curriculum`(`curric_name`))
-   FOREIGN KEY (`topic_id`) REFERENCES `topic_id`(`topic`))
+   FOREIGN KEY (`curric_assoc`) REFERENCES `curriculum`(`curric_name`),
+   FOREIGN KEY (`topic_id`) REFERENCES `topic`(`topic_id`))
    ENGINE=InnoDB, DEFAULT CHARSET=latin1;
 
 -- Make or remake goals relationship
