@@ -8,12 +8,14 @@ import create_tables as create
 import mysql.connector as conn
 
 #global constants
+USER = 'root'
+HOST = 'localhost'
 SCHEMA_NAME = 'curriculum_db'
 
 def connect_server(password):
     mydb = conn.connect(
-        host = "localhost",
-        user = "root",
+        host = HOST,
+        user = USER,
         passwd = password
     )
 
@@ -21,8 +23,8 @@ def connect_server(password):
 
 def connect_db(password, db):
     mydb = conn.connect(
-        host = "localhost",
-        user = "root",
+        host = HOST,
+        user = USER,
         passwd = password,
         database = db
     )
