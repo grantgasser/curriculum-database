@@ -26,10 +26,18 @@ def create_tables(mycursor):
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
 
-    mycursor.execute("DROP TABLE IF EXISTS `curric_courses`")
-    mycursor.execute("""CREATE TABLE IF NOT EXISTS `curric_courses`(
+    mycursor.execute("DROP TABLE IF EXISTS `curric_reqs`")
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `curric_reqs`(
             `course_name` VARCHAR(25) NOT NULL,
-            `req_by` VARCHAR(25) NOT NULL,
+            `req_for` VARCHAR(25) NOT NULL,
+            PRIMARY KEY (`course_name`),
+            FOREIGN KEY (`course_name`) REFERENCES `courses`(`course_name`))
+            ENGINE=InnoDB, DEFAULT CHARSET=latin1
+            """)
+
+    mycursor.execute("DROP TABLE IF EXISTS `curric_ops`")
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `curric_ops`(
+            `course_name` VARCHAR(25) NOT NULL,
             `op_for` VARCHAR(25) NOT NULL,
             PRIMARY KEY (`course_name`),
             FOREIGN KEY (`course_name`) REFERENCES `courses`(`course_name`))
@@ -43,9 +51,17 @@ def create_tables(mycursor):
             `lvl` int NOT NULL,
             `subject` VARCHAR(25) NOT NULL,
             `units` FLOAT NOT NULL,
+            PRIMARY KEY(`topic_id`, `topic_name`))
+            ENGINE=InnoDB, DEFAULT CHARSET=latin1
+            """)
+
+    mycursor.execute("DROP TABLE IF EXISTS `topic_curric`")
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `topic_curric`(
+            `topic_id` int NOT NULL,
             `curric_assoc` VARCHAR(25) NOT NULL,
-            PRIMARY KEY(`topic_id`, `topic_name`),
-            FOREIGN KEY (`curric_assoc`) REFERENCES `curriculum`(`curric_name`))
+            PRIMARY KEY(`topic_id`),
+            FOREIGN KEY (`curric_assoc`) REFERENCES `curriculum`(`curric_name`),
+            FOREIGN KEY (`topic_id`) REFERENCES `topic`(`topic_id`))
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
 
@@ -72,8 +88,8 @@ def create_tables(mycursor):
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
 
-    mycursor.execute("DROP TABLE IF EXISTS `grades`")
-    mycursor.execute("""CREATE TABLE IF NOT EXISTS `grades`(
+    mycursor.execute("DROP TABLE IF EXISTS `sec_grades`")
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `sec_grades`(
             `section_id` int NOT NULL,
             `A+` int NOT NULL,
             `A` int NOT NULL,
@@ -92,6 +108,30 @@ def create_tables(mycursor):
             `W` int NOT NULL,
             PRIMARY KEY(`section_id`),
             FOREIGN KEY(`section_id`) REFERENCES `section`(`section_id`))
+            ENGINE=InnoDB, DEFAULT CHARSET=latin1
+            """)
+
+
+    mycursor.execute("DROP TABLE IF EXISTS `goal_grades`")
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `goal_grades`(
+            `goal_id` int NOT NULL,
+            `A+` int NOT NULL,
+            `A` int NOT NULL,
+            `A-` int NOT NULL,
+            `B+` int NOT NULL,
+            `B` int NOT NULL,
+            `B-` int NOT NULL,
+            `C+` int NOT NULL,
+            `C` int NOT NULL,
+            `C-` int NOT NULL,
+            `D+` int NOT NULL,
+            `D` int NOT NULL,
+            `D-` int NOT NULL,
+            `F` int NOT NULL,
+            `I` int NOT NULL,
+            `W` int NOT NULL,
+            PRIMARY KEY(`goal_id`),
+            FOREIGN KEY(`goal_id`) REFERENCES `goals`(`goal_id`))
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
 
