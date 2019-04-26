@@ -30,7 +30,7 @@ def create_tables(mycursor):
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `curric_reqs`(
             `course_name` VARCHAR(25) NOT NULL,
             `req_for` VARCHAR(25) NOT NULL,
-            PRIMARY KEY (`course_name`),
+            PRIMARY KEY (`course_name`, 'req_for'),
             FOREIGN KEY (`course_name`) REFERENCES `courses`(`course_name`))
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
@@ -39,7 +39,7 @@ def create_tables(mycursor):
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `curric_ops`(
             `course_name` VARCHAR(25) NOT NULL,
             `op_for` VARCHAR(25) NOT NULL,
-            PRIMARY KEY (`course_name`),
+            PRIMARY KEY (`course_name`, 'op_for'),
             FOREIGN KEY (`course_name`) REFERENCES `courses`(`course_name`))
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
@@ -59,7 +59,7 @@ def create_tables(mycursor):
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `topic_curric`(
             `topic_id` int NOT NULL,
             `curric_assoc` VARCHAR(25) NOT NULL,
-            PRIMARY KEY(`topic_id`),
+            PRIMARY KEY(`topic_id`, 'curric_assoc'),
             FOREIGN KEY (`curric_assoc`) REFERENCES `curriculum`(`curric_name`),
             FOREIGN KEY (`topic_id`) REFERENCES `topic`(`topic_id`))
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
