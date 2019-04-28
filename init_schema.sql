@@ -25,10 +25,8 @@ CREATE TABLE IF NOT EXISTS `curriculum`(
    `person_name` VARCHAR(25) NOT NULL,
    `person_id` VARCHAR(25) NOT NULL,
    `min_hours` int NOT NULL,
-   `topic_cat` VARCHAR(25) NOT NULL,
    PRIMARY KEY (`curric_name`, `person_id`))
    ENGINE=InnoDB, DEFAULT CHARSET=latin1;
-
 
 -- Make or remake courses relationship 
 DROP TABLE IF EXISTS `courses`;
@@ -58,7 +56,6 @@ CREATE TABLE IF NOT EXISTS `curric_ops`(
    PRIMARY KEY (`course_name`),
    FOREIGN KEY (`course_name`) REFERENCES `courses`(`course_name`))
    ENGINE=InnoDB, DEFAULT CHARSET=latin1;
-
 
 -- Make or remake topic relationship
 DROP TABLE IF EXISTS `topic`;
@@ -149,7 +146,6 @@ CREATE TABLE IF NOT EXISTS `goal_grades`(
    PRIMARY KEY(`goal_id`),
    FOREIGN KEY(`goal_id`) REFERENCES `goals`(`goal_id`))
    ENGINE=InnoDB, DEFAULT CHARSET=latin1;
-
 
 --Make or remake course_goals relationship
 DROP TABLE IF EXISTS `course_goals`;
