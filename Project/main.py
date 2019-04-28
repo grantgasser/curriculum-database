@@ -83,8 +83,9 @@ def main():
         print(table[0])
 
     print('\nOpening GUI...\n')
-    gui = g.MyGUI()
+    gui = g.MyGUI(mycursor)
 
+    gui.show_tables()
 
 
 
