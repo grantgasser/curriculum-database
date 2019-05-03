@@ -58,8 +58,6 @@ def main():
     mycursor.execute('DROP DATABASE IF EXISTS ' + SCHEMA_NAME)
     mycursor.execute('CREATE DATABASE IF NOT EXISTS ' + SCHEMA_NAME)
 
-
-
     #Connect to schema (db) within server
     mydb = connect_db(password, SCHEMA_NAME)
 
