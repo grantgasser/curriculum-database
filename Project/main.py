@@ -81,10 +81,11 @@ def main():
         print(table[0])
 
     print('\nOpening GUI...\n')
-    gui = g.MyGUI(mycursor)
+    gui = g.MyGUI(mycursor, mydb)
 
-    gui.show_tables()
+    #gui.show_tables()
 
+    #gui.create_input_menu_options()
 
 
 
