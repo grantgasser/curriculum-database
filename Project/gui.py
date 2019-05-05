@@ -12,6 +12,9 @@ WIDTH = 800
 
 CURRIC_ATTR = ['curric_name', 'person_id', 'person_name', 'min_hours']
 COURSE_ATTR = ['course_name', 'subj_code', 'course_no', 'cred_hrs', 'description']
+CURRIC_REQS_ATTR = ['course_name', 'req_for']
+CURRIC_OPS_ATTR = ['course_name', 'op_for']
+TOPIC_ATTR = ['topic_id', 'topic_name', 'lvl', 'subject', 'units']
 
 class MyGUI:
     def __init__(self, mycursor, mydb):
@@ -20,7 +23,10 @@ class MyGUI:
         self.attr = 0
 
         self.new_curric_data = {}
-
+        self.new_course_data = {}
+        self.new_curric_reqs_data = {}
+        self.new_curric_ops_data = {}
+        self.new_topic_data = {}
 
         self.main_window = tk.Tk()
 
@@ -51,14 +57,17 @@ class MyGUI:
 
 
         #May have to create options dynamically (or could just hard code...)
-        self.input_menu_button.menu.add_command(label='Curriculum', command=lambda:self.display_curric_text())
-        self.input_menu_button.menu.add_command(label='Courses', command=lambda:self.insert_course())
+        self.input_menu_button.menu.add_command(label='curriculum', command=lambda:self.display_text('curriculum'))
+        self.input_menu_button.menu.add_command(label='courses', command=lambda:self.display_text('courses'))
+        self.input_menu_button.menu.add_command(label='topic', command=lambda:self.display_text('topic'))
+        self.input_menu_button.menu.add_command(label='curric_reqs', command=lambda:self.display_text('curric_reqs'))
+        self.input_menu_button.menu.add_command(label='curric_ops', command=lambda:self.display_text('curric_ops'))
         self.input_menu_button.menu.add_command(label='Get Curriculum', command=lambda:self.get_curric())#CHANGE
         self.input_menu_button.place(relwidth=0.15, relheight=.2)
 
         self.mid_label = tk.Label(self.main_window, anchor='nw', font=('Times', '12'))
         self.mid_label.place(relx=0.5, rely=0.42, relwidth=0.75, relheight=0.05, anchor='n')
-        self.mid_label['text'] = 'Edit Existing Data'
+        self.mid_label['text'] = 'Update Existing Data'
 
         self.mid_frame = tk.Frame(self.main_window, bg='#a3a3c2', bd=2)
         self.mid_frame.place(relx=.5, rely=.45, relwidth=.75, relheight=0.2, anchor='n')
@@ -94,27 +103,44 @@ class MyGUI:
         print('You clicked ' + tbl_name)
 
 
-    def display_curric_text(self):
+    def display_text(self, table_name):
         self.attr = 0
 
         self.insert_label = tk.Label(self.top_frame, font=('Times', '12'))
         self.insert_label.place(relx =.5, rely=.3, relwidth=0.25, relheight=.15)
-        self.insert_label['text'] = 'Please enter Curriculum data.'
+        self.insert_label['text'] = 'Please enter ' + table_name + ' data.'
 
         self.insert_label_attr = tk.Label(self.top_frame, font=('Times', '12'))
         self.insert_label_attr.place(relx =.5, rely=.55, relwidth=0.2, relheight=.15)
-        self.insert_label_attr['text'] = 'Please enter ' + CURRIC_ATTR[self.attr]
+
+        table_dict = {}
+        if table_name == 'curriculum':
+            self.insert_label_attr['text'] = 'Please enter ' + CURRIC_ATTR[self.attr]
+            table_dict = CURRIC_ATTR
+        elif table_name == 'courses':
+            self.insert_label_attr['text'] = 'Please enter ' + COURSE_ATTR[self.attr]
+            table_dict = COURSE_ATTR
+        elif table_name == 'curric_reqs':
+            self.insert_label_attr['text'] = 'Please enter ' + CURRIC_REQS_ATTR[self.attr]
+            table_dict = CURRIC_REQS_ATTR
+        elif table_name == 'curric_ops':
+            self.insert_label_attr['text'] = 'Please enter ' + CURRIC_OPS_ATTR[self.attr]
+            table_dict = CURRIC_OPS_ATTR
+        elif table_name == 'topic':
+            self.insert_label_attr['text'] = 'Please enter ' + TOPIC_ATTR[self.attr]
+            table_dict = TOPIC_ATTR
+
 
         self.entry = tk.Entry(self.top_frame, font=40)
         self.entry.place(relx =.5, rely=.75, relwidth=0.2, relheight=.2)
 
-        self.button = tk.Button(self.top_frame, text="Enter", font=40, command=lambda: [self.insert_curric_data(self.entry.get()), self.change_attr(CURRIC_ATTR)])
+        self.button = tk.Button(self.top_frame, text="Enter", font=40, command=lambda: [self.insert_data(self.entry.get(), table_name, table_dict), self.change_attr(table_name, table_dict)])
         self.button.place(relx=0.75, rely=.75, relwidth=0.2, relheight=0.2)
 
-    def change_attr(self, table):
+    def change_attr(self, table_name, table_dict):
         self.attr += 1
 
-        if self.attr < len(table):
+        if self.attr < len(table_dict):
             self.insert_label_attr.destroy()
             self.entry.destroy()
             self.button.destroy()
@@ -122,28 +148,46 @@ class MyGUI:
             #change attribute that we are collecting
             self.insert_label_attr = tk.Label(self.top_frame, font=('Times', '12'))
             self.insert_label_attr.place(relx =.5, rely=.55, relwidth=0.2, relheight=.15)
-            self.insert_label_attr['text'] = 'Please enter ' + CURRIC_ATTR[self.attr]
+            self.insert_label_attr['text'] = 'Please enter ' + table_dict[self.attr]
 
             #reset entry
             self.entry = tk.Entry(self.top_frame, font=40)
             self.entry.place(relx =.5, rely=.75, relwidth=0.2, relheight=.2)
 
             #reset button
-            self.button = tk.Button(self.top_frame, text="Enter", font=40, command=lambda: [self.insert_curric_data(self.entry.get()), self.change_attr(CURRIC_ATTR)])
+            self.button = tk.Button(self.top_frame, text="Enter", font=40, command=lambda: [self.insert_data(self.entry.get(), table_name, table_dict), self.change_attr(table_name, table_dict)])
             self.button.place(relx=0.75, rely=.75, relwidth=0.2, relheight=0.2)
 
         #cannot accept any more values, so insert into table
         else:
             #Insert data into db
-            ins.insert_into_curric(self.new_curric_data, self.cursor, self.db)
+            if table_name == 'curriculum':
+                ins.insert_into_curric(self.new_curric_data, self.cursor, self.db)
+            elif table_name == 'courses':
+                ins.insert_into_courses(self.new_course_data, self.cursor, self.db)
+            elif table_name == 'curric_reqs':
+                ins.insert_into_reqs(self.new_curric_reqs_data, self.cursor, self.db)
+            elif table_name == 'curric_ops':
+                ins.insert_into_ops(self.new_curric_ops_data, self.cursor, self.db)
+            elif table_name == 'topic':
+                ins.insert_into_topic(self.new_topic_data, self.cursor, self.db)
 
 
     #FUNCTIONS FOR INSERTING DATA
-    def insert_curric_data(self, input):
+    def insert_data(self, input, table_name, table_dict):
         print(input)
 
         #Just hardcode for now
-        self.new_curric_data[CURRIC_ATTR[self.attr]] = input
+        if table_name == 'curriculum':
+            self.new_curric_data[table_dict[self.attr]] = input
+        elif table_name == 'courses':
+            self.new_course_data[table_dict[self.attr]] = input
+        elif table_name == 'curric_reqs':
+            self.new_curric_reqs_data[table_dict[self.attr]] = input
+        elif table_name == 'curric_ops':
+            self.new_curric_ops_data[table_dict[self.attr]] = input
+        elif table_name == 'topic':
+            self.new_topic_data[table_dict[self.attr]] = input
 
         #destroy
         #self.insert_label.destroy()
@@ -151,45 +195,6 @@ class MyGUI:
         #self.entry.destroy()
         #self.button.destroy()
 
-
-
-    def insert_course(self):
-        print('Insert Course data')
-
-        new_course_data = {}
-
-        self.insert_label = tk.Label(self.top_frame, font=('Times', '12'))
-        self.insert_label.place(relx =.5, rely=.3, relwidth=0.25, relheight=.15)
-        self.insert_label['text'] = 'Please enter Course data.'
-
-
-        for attr in COURSE_ATTR:
-
-            self.insert_label_attr = tk.Label(self.top_frame, font=('Times', '12'))
-            self.insert_label_attr.place(relx =.5, rely=.55, relwidth=0.2, relheight=.15)
-            self.insert_label_attr['text'] = 'Please enter ' + attr
-
-            self.entry = tk.Entry(self.top_frame, font=40)
-            self.entry.place(relx =.5, rely=.75, relwidth=0.2, relheight=.2)
-
-            self.button = tk.Button(self.top_frame, text="Enter", font=40, command=lambda: print('placeholder'))
-            self.button.place(relx=0.75, rely=.75, relwidth=0.2, relheight=0.2)
-
-        #Just hardcode for now
-        new_course_data[CURRIC_ATTR[0]] = 'Database'
-        new_course_data[CURRIC_ATTR[1]] = 'CSI'
-        new_course_data[CURRIC_ATTR[2]] = '3335'
-        new_course_data[CURRIC_ATTR[3]] = 3
-        new_course_data[CURRIC_ATTR[4]] = 'Not a fun class'
-
-        #destroy
-        #self.insert_label.destroy()
-        #self.insert_label_attr.destroy()
-        #self.entry.destroy()
-        #self.button.destroy()
-
-        #Insert data into db
-        ins.insert_into_curric(new_curric_data, self.cursor, self.db)
 
 
 
