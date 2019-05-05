@@ -3,11 +3,12 @@
 import tkinter as tk
 import tkinter.messagebox
 import insert_data as ins
+import queries as q
 
 HEIGHT = 800
 WIDTH = 800
 
-CURRIC_ATTR = ['curric_name', 'person_id', 'person_name', 'min_hours', 'topic_cat']
+CURRIC_ATTR = ['curric_name', 'person_id', 'person_name', 'min_hours']
 COURSE_ATTR = ['course_name', 'subj_code', 'course_no', 'cred_hrs', 'description']
 
 class MyGUI:
@@ -40,10 +41,15 @@ class MyGUI:
         #May have to create options dynamically (or could just hard code...)
         self.input_menu_button.menu.add_command(label='Curriculum', command=lambda:self.insert_curric())
         self.input_menu_button.menu.add_command(label='Courses', command=lambda:self.insert_course())
+        self.input_menu_button.menu.add_command(label='Get Curriculum', command=lambda:self.get_curric())
         self.input_menu_button.place(relwidth=0.15, relheight=.2)
 
         self.mid_frame = tk.Frame(self.main_window, bg='#6666ff', bd=2)
         self.mid_frame.place(relx=.5, rely=.45, relwidth=.75, relheight=0.3, anchor='n')
+
+
+        self.bottom_frame = tk.Frame(self.main_window, bg='#6666ff', bd=2)
+        self.bottom_frame.place(relx=.5, rely=.45, relwidth=.75, relheight=0.3, anchor='n')
 
         #self.lower_frame = tk.Frame(self.main_window, bg='#ff33cc', bd=5)
         #self.lower_frame.place(relx=0.5, rely=.7, relwidth=0.75, relheight=0.35, anchor='s')
@@ -108,14 +114,15 @@ class MyGUI:
         new_curric_data[CURRIC_ATTR[1]] = '12345'
         new_curric_data[CURRIC_ATTR[2]] = 'Dr Lin'
         new_curric_data[CURRIC_ATTR[3]] = 100
-        new_curric_data[CURRIC_ATTR[4]] = 'NULL'
 
+        #destroy
+        #self.insert_label.destroy()
+        #self.insert_label_attr.destroy()
+        #self.entry.destroy()
+        #self.button.destroy()
 
         #Insert data into db
         ins.insert_into_curric(new_curric_data, self.cursor, self.db)
-
-
-
 
 
 
@@ -141,9 +148,32 @@ class MyGUI:
             self.button = tk.Button(self.top_frame, text="Enter", font=40, command=lambda: print('placeholder'))
             self.button.place(relx=0.75, rely=.75, relwidth=0.2, relheight=0.2)
 
+        #Just hardcode for now
+        new_course_data[CURRIC_ATTR[0]] = 'Database'
+        new_course_data[CURRIC_ATTR[1]] = 'CSI'
+        new_course_data[CURRIC_ATTR[2]] = '3335'
+        new_course_data[CURRIC_ATTR[3]] = 3
+        new_course_data[CURRIC_ATTR[4]] = 'Not a fun class'
+
+        #destroy
+        #self.insert_label.destroy()
+        #self.insert_label_attr.destroy()
+        #self.entry.destroy()
+        #self.button.destroy()
+
+        #Insert data into db
+        ins.insert_into_curric(new_curric_data, self.cursor, self.db)
 
 
 
     #FUNCTIONS FOR QUERIES
     def get_curric(self):
-        pass
+
+        #hardcode
+        curric_name = 'Computer Science'
+        person_id = '12345'
+
+        result = q.get_curric(curric_name, person_id, self.cursor)
+
+        for tuple in result:
+            print(tuple)
