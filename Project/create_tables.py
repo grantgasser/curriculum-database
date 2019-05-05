@@ -144,3 +144,4 @@ def create_tables(mycursor):
             FOREIGN KEY (`goal_id`) REFERENCES `goals`(`goal_id`))
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
+
