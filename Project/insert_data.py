@@ -205,12 +205,59 @@ def insert_into_sec_grades(new_data, mycursor, mydb):
              VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s""") 
 
     vals = (new_data['section_id'], new_data['A+'], new_data['A'], new_data['A-'], new_data['B+'],
-            new_data['B'], new_data['B-'], new_data['C+'], new_data['C'], new_data['C-'])
+            new_data['B'], new_data['B-'], new_data['C+'], new_data['C'], new_data['C-'],
+            new_data['D+'], new_data['D'], new_data['D-'], new_data['F'], new_data['I'], new_data['W'])
 
     mycursor.execute(sql, vals)
 
     mydb.commit()
 
-    print('\nThe new section of course ' + new_data['course_name'] + ' has been added.')
+    print('\nThe new grade distribution has been added. Section id: '+new_data['section_id'])
+
+##################################################################################
+# Function: insert_into_goal_grades
+# 
+# Purpose: Insert data into the goal_grades table of the database
+# 
+# Parameters:
+#        new_data: A dictionary of the data to be inserted
+#        mycursor: A cursor to do the insertions
+#        mydb: The database in which the table lies
+##################################################################################
+def insert_into_goal_grades(new_data, mycursor, mydb):
+    sql = """INSERT INTO goal_grades (goal_id, A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, F, I, W)
+             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s""") 
+
+    vals = (new_data['goal_id'], new_data['A+'], new_data['A'], new_data['A-'], new_data['B+'],
+            new_data['B'], new_data['B-'], new_data['C+'], new_data['C'], new_data['C-'],
+            new_data['D+'], new_data['D'], new_data['D-'], new_data['F'], new_data['I'], new_data['W'])
+
+    mycursor.execute(sql, vals)
+
+    mydb.commit()
+
+    print('\nThe new grade distribution has been added. Goal id: '+new_data['section_id'])
+
+##################################################################################
+# Function: insert_into_course_goals
+# 
+# Purpose: Insert data into the course_goals table of the database
+# 
+# Parameters:
+#        new_data: A dictionary of the data to be inserted
+#        mycursor: A cursor to do the insertions
+#        mydb: The database in which the table lies
+##################################################################################
+def insert_into_course_goals(new_data, mycursor, mydb):
+    sql = """INSERT INTO course_goals (course_name, goal_id)
+             VALUES (%s, %s);"""
+
+    vals = (new_data['course_name'], new_data['goal_id'])
+
+    mycursor.execute(sql, vals)
+
+    mydb.commit()
+
+    print('\nThe goal with id '+new_data['goal_id']+' has been added to the course '+new_data['course_name']+'.')
 
 
