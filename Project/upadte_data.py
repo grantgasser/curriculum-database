@@ -35,10 +35,12 @@ def updateCurriculum( curric, mycursor, mydb):
         new_data['min_hours'] = input("Change the minimum hour requirement to: ")
 
     print("What would you like to change the attribute to?\n")
-    sql = """UPDATE curriculum SET """+attr+""" = """+new_data[attr]+"""
-             WHERE curric_name = """+curric['curric_name']+""" AND person_id = """+curric['person_id']
+    sql = """UPDATE curriculum SET """+attr+""" = %s
+             WHERE curric_name = %s AND person_id = %s""" 
 
-    mycursor.execute(sql)
+    vals = (new_data[attr], target['curric_name'], target['person_id'])
+
+    mycursor.execute(sql, vals)
 
     mydb.commit()
 
