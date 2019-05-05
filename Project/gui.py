@@ -71,8 +71,6 @@ class MyGUI:
         self.bottom_frame = tk.Frame(self.main_window, bg='#a3a3c2', bd=2)
         self.bottom_frame.place(relx=.5, rely=.7, relwidth=.75, relheight=0.2, anchor='n')
 
-        #self.lower_frame = tk.Frame(self.main_window, bg='#ff33cc', bd=5)
-        #self.lower_frame.place(relx=0.5, rely=.7, relwidth=0.75, relheight=0.35, anchor='s')
 
         #run
         self.main_window.mainloop()
@@ -90,10 +88,6 @@ class MyGUI:
 
             self.tables_label ['text'] += table[0]
             i += 1
-
-
-    #def get_input(self,input):
-    #    print(input)
 
 
     def click_input_option(self, tbl_name):
@@ -114,13 +108,13 @@ class MyGUI:
         self.entry = tk.Entry(self.top_frame, font=40)
         self.entry.place(relx =.5, rely=.75, relwidth=0.2, relheight=.2)
 
-        self.button = tk.Button(self.top_frame, text="Enter", font=40, command=lambda: [self.insert_curric_data(self.entry.get()), self.change_attr()])
+        self.button = tk.Button(self.top_frame, text="Enter", font=40, command=lambda: [self.insert_curric_data(self.entry.get()), self.change_attr(CURRIC_ATTR)])
         self.button.place(relx=0.75, rely=.75, relwidth=0.2, relheight=0.2)
 
-    def change_attr(self):
+    def change_attr(self, table):
         self.attr += 1
 
-        if self.attr < len(CURRIC_ATTR):
+        if self.attr < len(table):
             self.insert_label_attr.destroy()
             self.entry.destroy()
             self.button.destroy()
@@ -135,7 +129,7 @@ class MyGUI:
             self.entry.place(relx =.5, rely=.75, relwidth=0.2, relheight=.2)
 
             #reset button
-            self.button = tk.Button(self.top_frame, text="Enter", font=40, command=lambda: [self.insert_curric_data(self.entry.get()), self.change_attr()])
+            self.button = tk.Button(self.top_frame, text="Enter", font=40, command=lambda: [self.insert_curric_data(self.entry.get()), self.change_attr(CURRIC_ATTR)])
             self.button.place(relx=0.75, rely=.75, relwidth=0.2, relheight=0.2)
 
         #cannot accept any more values, so insert into table
