@@ -79,6 +79,7 @@ def create_tables(mycursor):
             `section_id` int NOT NULL,
             `course_name` VARCHAR(25) NOT NULL,
             `semester` VARCHAR(7) NOT NULL,
+            `year` int(4) NOT NULL,
             `num_stu` int NOT NULL,
             `comment1` VARCHAR(255) NOT NULL,
             `comment2` VARCHAR(255) NOT NULL,
