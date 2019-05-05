@@ -10,32 +10,39 @@
 # Purpose: updates the curriculum table
 #
 # Parameters:
+#        curric: A dictionary containing the primary key for the curriculum to edit
 #        mycursor: A cursor to do the updates
 #        mydb: The database in which the table lies
-#        curric: A dictionary containing the primary key for the curriculum to edit
 ####################################################################################
-def updateCurriculum( new_curric_data, mycursor, mydb):
-    print("What would you like to change the attributes to? (Leave it blank for it to stay the same)\n")
+def updateCurriculum( curric, mycursor, mydb):
+    attr = input("""What attribute would you like to change? (curriculum = name of the curriculum
+                                                       name = name of the instructor
+                                                       id = id of the instructor
+                                                       hours = the minimum hour requirements)"""
     
     new_data = {}
-    new_data['curric_name'] = input("Change the curriculum's name to: ")
-    new_data['person_name'] = input("Change the instructor's name to: ")
-    new_data['person_id'] = input("Change the ID of the instructor to: ")
-    new_data['min_hours'] = input("Change the minimum hour requirement to: ")
+    if attr == "curriculum"
+        attr = "curric_name"
+        new_data['curric_name'] = input("Change the curriculum's name to: ")
+    elif attr == "name"
+        attr = "person_name"
+        new_data['person_name'] = input("Change the instructor's name to: ")
+    elif attr == "id"
+        attr = "person_id"
+        new_data['person_id'] = input("Change the ID of the instructor to: ")
+    elif attr == "hours"
+        attr = "min_hours"
+        new_data['min_hours'] = input("Change the minimum hour requirement to: ")
 
-    sql = """INSERT 
-            (curric_name, person_name, person_id, min_hours)
-            VALUES (%s, %s, %s, %s)"""
+    print("What would you like to change the attribute to?\n")
+    sql = """UPDATE curriculum SET """+attr+""" = """+new_data[attr]+"""
+             WHERE curric_name = """+curric['curric_name']+""" AND person_id = """+curric['person_id']
 
-    vals = (new_curric_data['curric_name'], new_curric_data['person_name'],
-            new_curric_data['person_id'], new_curric_data['min_hours'])
-
-
-    mycursor.execute(sql, vals)
+    mycursor.execute(sql)
 
     mydb.commit()
 
-    print('\nThe ' + new_curric_data['curric_name'] + ' curriculum has been added.')
+    print('\nThe curriculum has been updated')
 
 
 ##################################################################################
