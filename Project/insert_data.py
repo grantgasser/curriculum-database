@@ -32,9 +32,9 @@ def insert_into_curric( new_curric_data, mycursor, mydb):
 
 ##################################################################################
 # Function: insert_into_courses
-# 
+#
 # Purpose: Insert data into the courses table of the database
-# 
+#
 # Parameters:
 #        new_data: A dictionary of the data to be inserted
 #        mycursor: A cursor to do the insertions
@@ -56,9 +56,9 @@ def insert_into_courses(new_data, mycursor, mydb):
 
 ##################################################################################
 # Function: insert_into_reqs
-# 
+#
 # Purpose: Insert data into the curric_reqs table of the database
-# 
+#
 # Parameters:
 #        new_data: A dictionary of the data to be inserted
 #        mycursor: A cursor to do the insertions
@@ -79,9 +79,9 @@ def insert_into_reqs(new_data, mycursor, mydb):
 
 ##################################################################################
 # Function: insert_into_ops
-# 
+#
 # Purpose: Insert data into the curric_ops table of the database
-# 
+#
 # Parameters:
 #        new_data: A dictionary of the data to be inserted
 #        mycursor: A cursor to do the insertions
@@ -102,9 +102,9 @@ def insert_into_ops(new_data, mycursor, mydb):
 
 ##################################################################################
 # Function: insert_into_topic
-# 
+#
 # Purpose: Insert data into the topic table of the database
-# 
+#
 # Parameters:
 #        new_data: A dictionary of the data to be inserted
 #        mycursor: A cursor to do the insertions
@@ -126,9 +126,9 @@ def insert_into_topic(new_data, mycursor, mydb):
 
 ##################################################################################
 # Function: insert_into_topic_curric
-# 
+#
 # Purpose: Insert data into the topic_curric table of the database
-# 
+#
 # Parameters:
 #        new_data: A dictionary of the data to be inserted
 #        mycursor: A cursor to do the insertions
@@ -149,9 +149,9 @@ def insert_into_topic_curric(new_data, mycursor, mydb):
 
 ##################################################################################
 # Function: insert_into_goals
-# 
+#
 # Purpose: Insert data into the goals table of the database
-# 
+#
 # Parameters:
 #        new_data: A dictionary of the data to be inserted
 #        mycursor: A cursor to do the insertions
@@ -172,9 +172,9 @@ def insert_into_goals(new_data, mycursor, mydb):
 
 ##################################################################################
 # Function: insert_into_section
-# 
+#
 # Purpose: Insert data into the section table of the database
-# 
+#
 # Parameters:
 #        new_data: A dictionary of the data to be inserted
 #        mycursor: A cursor to do the insertions
@@ -196,9 +196,9 @@ def insert_into_section(new_data, mycursor, mydb):
 
 ##################################################################################
 # Function: insert_into_sec_grades
-# 
+#
 # Purpose: Insert data into the sec_grades table of the database
-# 
+#
 # Parameters:
 #        new_data: A dictionary of the data to be inserted
 #        mycursor: A cursor to do the insertions
@@ -206,7 +206,7 @@ def insert_into_section(new_data, mycursor, mydb):
 ##################################################################################
 def insert_into_sec_grades(new_data, mycursor, mydb):
     sql = """INSERT INTO sec_grades (section_id, A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, F, I, W)
-             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""" 
+             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"""
 
     vals = (new_data['section_id'], new_data['A+'], new_data['A'], new_data['A-'], new_data['B+'],
             new_data['B'], new_data['B-'], new_data['C+'], new_data['C'], new_data['C-'],
@@ -220,9 +220,9 @@ def insert_into_sec_grades(new_data, mycursor, mydb):
 
 ##################################################################################
 # Function: insert_into_goal_grades
-# 
+#
 # Purpose: Insert data into the goal_grades table of the database
-# 
+#
 # Parameters:
 #        new_data: A dictionary of the data to be inserted
 #        mycursor: A cursor to do the insertions
@@ -230,7 +230,7 @@ def insert_into_sec_grades(new_data, mycursor, mydb):
 ##################################################################################
 def insert_into_goal_grades(new_data, mycursor, mydb):
     sql = """INSERT INTO goal_grades (goal_id, A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, F, I, W)
-             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""" 
+             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"""
 
     vals = (new_data['goal_id'], new_data['A+'], new_data['A'], new_data['A-'], new_data['B+'],
             new_data['B'], new_data['B-'], new_data['C+'], new_data['C'], new_data['C-'],
@@ -244,9 +244,9 @@ def insert_into_goal_grades(new_data, mycursor, mydb):
 
 ##################################################################################
 # Function: insert_into_course_goals
-# 
+#
 # Purpose: Insert data into the course_goals table of the database
-# 
+#
 # Parameters:
 #        new_data: A dictionary of the data to be inserted
 #        mycursor: A cursor to do the insertions
@@ -263,5 +263,3 @@ def insert_into_course_goals(new_data, mycursor, mydb):
     mydb.commit()
 
     print('\nThe goal with id '+new_data['goal_id']+' has been added to the course '+new_data['course_name']+'.')
-
-
