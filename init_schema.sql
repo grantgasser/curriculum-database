@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `goal_grades`(
    FOREIGN KEY(`goal_id`) REFERENCES `goals`(`goal_id`))
    ENGINE=InnoDB, DEFAULT CHARSET=latin1;
 
---Make or remake course_goals relationship
+-- Make or remake course_goals relationship
 DROP TABLE IF EXISTS `course_goals`;
 CREATE TABLE IF NOT EXISTS `course_goals`(
    `course_name` VARCHAR(25) NOT NULL,
