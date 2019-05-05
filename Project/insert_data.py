@@ -1,4 +1,8 @@
-## Insert data
+####################################################################################
+# Author: Jackson O'Donnell, Grant Gasser
+#
+# Purpose: Functions to insert into any of the given tables in the database
+####################################################################################
 
 ####################################################################################
 # Function: insert_into_curric
