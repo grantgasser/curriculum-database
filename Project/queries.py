@@ -84,3 +84,4 @@ def get_curric_dash(curric_name,mycursor):
 
 	mycursor.execute(sql,vals)
 	mycursor.fetchall()
+
