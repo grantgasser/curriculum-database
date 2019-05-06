@@ -10,6 +10,7 @@ def create_tables(mycursor):
             `person_name` VARCHAR(25) NOT NULL,
             `person_id` VARCHAR(25) NOT NULL,
             `min_hours` int NOT NULL,
+            `min_cover` int NOT NULL,
             PRIMARY KEY (`curric_name`, `person_id`))
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)

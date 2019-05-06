@@ -16,11 +16,11 @@
 ####################################################################################
 def insert_into_curric( new_curric_data, mycursor, mydb):
     sql = """INSERT INTO curriculum
-            (curric_name, person_name, person_id, min_hours)
-            VALUES (%s, %s, %s, %s)"""
+            (curric_name, person_name, person_id, min_hours, min_cover)
+            VALUES (%s, %s, %s, %s, %s)"""
 
     vals = (new_curric_data['curric_name'], new_curric_data['person_name'],
-            new_curric_data['person_id'], new_curric_data['min_hours'])
+            new_curric_data['person_id'], new_curric_data['min_hours'], new_curric_data['min_cover'])
 
 
     mycursor.execute(sql, vals)
