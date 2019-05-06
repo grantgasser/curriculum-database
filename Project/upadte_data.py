@@ -10,31 +10,13 @@
 # Purpose: updates the curriculum table
 #
 # Parameters:
+#        attr: The attribute to be edited
+#        data: The new value for the attribute
 #        curric: A dictionary containing the primary key for the curriculum to edit
 #        mycursor: A cursor to do the updates
 #        mydb: The database in which the table lies
 ####################################################################################
-def updateCurriculum( curric, mycursor, mydb):
-    attr = input("""What attribute would you like to change? (curriculum = name of the curriculum
-                                                       name = name of the instructor
-                                                       id = id of the instructor
-                                                       hours = the minimum hour requirements)"""
-    
-    new_data = {}
-    if attr == "curriculum"
-        attr = "curric_name"
-        new_data['curric_name'] = input("Change the curriculum's name to: ")
-    elif attr == "name"
-        attr = "person_name"
-        new_data['person_name'] = input("Change the instructor's name to: ")
-    elif attr == "id"
-        attr = "person_id"
-        new_data['person_id'] = input("Change the ID of the instructor to: ")
-    elif attr == "hours"
-        attr = "min_hours"
-        new_data['min_hours'] = input("Change the minimum hour requirement to: ")
-
-    print("What would you like to change the attribute to?\n")
+def updateCurriculum(attr, data, curric, mycursor, mydb):
     sql = """UPDATE curriculum SET """+attr+""" = %s
              WHERE curric_name = %s AND person_id = %s""" 
 
@@ -48,237 +30,252 @@ def updateCurriculum( curric, mycursor, mydb):
 
 
 ##################################################################################
-# Function: insert_into_courses
+# Function: updateCourses
 # 
-# Purpose: Insert data into the courses table of the database
+# Purpose: Updates the courses table 
 # 
 # Parameters:
-#        new_data: A dictionary of the data to be inserted
+#        attr: The attribute to be edited
+#        data: The new value for the attribute
+#        course: A dictionary of the primary key for the course
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def insert_into_courses(new_data, mycursor, mydb):
-    sql = """INSERT INTO courses (course_name, subj_code, course_no, cred_hrs, description)
-             VALUES (%s, %s, %s, %s, %s);"""
+def updateCourses(attr, data, course, mycursor, mydb):
+    sql = """UPDATE courses SET """+attr+""" = %s
+             WHERE course_name = """+course
 
-    vals = (new_data['course_name'], new_data['subj_code'], new_data['course_no'],
-            new_data['cred_hrs'], new_data['description'])
+    vals = (data)
 
     mycursor.execute(sql, vals)
 
     mydb.commit()
 
-    print('\nThe ' + new_data['course_name'] + ' course has been added.')
+    print('\nThe course has been updates') 
 
 
 ##################################################################################
-# Function: insert_into_reqs
+# Function: updateReqs
 # 
-# Purpose: Insert data into the curric_reqs table of the database
+# Purpose: Updates the course_reqs table
 # 
 # Parameters:
-#        new_data: A dictionary of the data to be inserted
+#        attr: The attribute to be edited
+#        data: The new value for the attribute
+#        req: A dictionary for the primary key of the curric_req (name and req)
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def insert_into_reqs(new_data, mycursor, mydb):
-    sql = """INSERT INTO curric_reqs (course_name, req_for)
-             VALUES (%s, %s);"""
+def updateReqs(attr, data, req, mycursor, mydb):
+    sql = """UPDATE curric_reqs SET """+attr+""" = %s
+             WHERE course_name = %s AND req_for = %s"""
 
-    vals = (new_data['course_name'], new_data['req_for'])
+    vals = (data, req['course_name'], req['req_for'])
 
     mycursor.execute(sql, vals)
 
     mydb.commit()
 
-    print('\nThe new course requirement has been added.')
+    print('\nThe course requirement has been edited.')
 
 
 ##################################################################################
-# Function: insert_into_ops
+# Function: updateOps
 # 
-# Purpose: Insert data into the curric_ops table of the database
+# Purpose: Updates the curric_ops table
 # 
 # Parameters:
-#        new_data: A dictionary of the data to be inserted
+#        attr: The attribute to be edited
+#        data: The new value for the attribute
+#        op: A dictionary for the primary key of the curric_op (name and op)
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def insert_into_ops(new_data, mycursor, mydb):
-    sql = """INSERT INTO curric_ops (course_name, op_for)
-             VALUES (%s, %s);"""
+def updateOps(attr, data, op, mycursor, mydb):
+    sql = """UPDATE curric_ops SET """+attr+""" = %s
+             WHERE course_name = %s AND op_for = %s"""
 
-    vals = (new_data['course_name'], new_data['op_for'])
+    vals = (data, op['course_name'], op['op_for'])
 
     mycursor.execute(sql, vals)
 
     mydb.commit()
 
-    print('\nThe new course option has been added.')
+    print('\nThe course option has been edited.')
 
 
 ##################################################################################
-# Function: insert_into_topic
+# Function: updateTopic
 # 
-# Purpose: Insert data into the topic table of the database
+# Purpose: Updates the topic table
 # 
 # Parameters:
-#        new_data: A dictionary of the data to be inserted
+#        attr: The attribute to be edited
+#        data: The new value for the attribute
+#        topic: A dictionary for the primary key of the topic (id, name)
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def insert_into_topic(new_data, mycursor, mydb):
-    sql = """INSERT INTO topic (topic_id, topic_name, lvl, subject, units)
-             VALUES (%s, %s, %s, %s, %s);"""
+def updateTopic(attr, data, topic, mycursor, mydb):
+    sql = """UPDATE topic SET """+attr+""" = %s
+             WHERE topic_name = %s AND topic_id = %s"""
 
-    vals = (new_data['topic_id'], new_data['topic_name'], new_data['lvl'],
-            new_data['subject'], new_data['units'])
+    vals = (data, topic['topic_name'], topic['topic_id'])
 
     mycursor.execute(sql, vals)
 
     mydb.commit()
 
-    print('\nThe ' + new_data['topic_name'] + ' topic has been added.')
+    print('\nThe topic has been edited.')
 
 
 ##################################################################################
-# Function: insert_into_topic_curric
+# Function: updateTopicCurric
 # 
-# Purpose: Insert data into the topic_curric table of the database
+# Purpose: Updates the topic_curric table
 # 
 # Parameters:
-#        new_data: A dictionary of the data to be inserted
+#        attr: The attribute to be edited
+#        data: The new value for the attribute
+#        topic: A dictionary for the primary key of the topic_curric (id)
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def insert_into_topic_curric(new_data, mycursor, mydb):
-    sql = """INSERT INTO topic_curric (topic_id, curric_assoc)
-             VALUES (%s, %s);"""
+def updateTopic(attr, data, topic, mycursor, mydb):
+    sql = """UPDATE topic_curric SET """+attr+""" = %s
+             WHERE topic_id = %s"""
 
-    vals = (new_data['topic_id'], new_data['curric_assoc'])
+    vals = (data, topic['topic_id'])
 
     mycursor.execute(sql, vals)
 
     mydb.commit()
 
-    print('\nThe new topic-curriculum association has been added.')
+    print('\nThe topic-curriculum relationship has been edited.')
 
 
 ##################################################################################
-# Function: insert_into_goals
+# Function: updateGoals
 # 
-# Purpose: Insert data into the goals table of the database
+# Purpose: Updates the goals table
 # 
 # Parameters:
-#        new_data: A dictionary of the data to be inserted
+#        attr: The attribute to be edited
+#        data: The new value for the attribute
+#        goal: A dictionary for the primary key of the goal (id)
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def insert_into_goals(new_data, mycursor, mydb):
-    sql = """INSERT INTO goals(goal_id, description, curric_name)
-             VALUES (%s, %s, %s);"""
+def updateTopic(attr, data, goal, mycursor, mydb):
+    sql = """UPDATE goals SET """+attr+""" = %s
+             WHERE goal_id = %s"""
 
-    vals = (new_data['goal_id'], new_data['description'], new_data['curric_name'])
+    vals = (data, goal['goal_id'])
 
     mycursor.execute(sql, vals)
 
     mydb.commit()
 
-    print('\nThe new goal has been added.')
+    print('\nThe goal has been edited.')
 
 
 ##################################################################################
-# Function: insert_into_section
+# Function: updateSection
 # 
-# Purpose: Insert data into the section table of the database
+# Purpose: Updates the section table
 # 
 # Parameters:
-#        new_data: A dictionary of the data to be inserted
+#        attr: The attribute to be edited
+#        data: The new value for the attribute
+#        section: A dictionary for the primary key of the section (id)
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def insert_into_section(new_data, mycursor, mydb):
-    sql = """INSERT INTO section (section_id, course_name, semester, num_stu, comment1, comment2)
-             VALUES (%s, %s, %s, %s, %s, %s);"""
+def updateTopic(attr, data, section, mycursor, mydb):
+    sql = """UPDATE section SET """+attr+""" = %s
+             WHERE section_id = %s"""
 
-    vals = (new_data['section_id'], new_data['course_name'], new_data['semester'],
-            new_data['num_stu'], new_data['comment1'], new_data['comment2'])
+    vals = (data, section['section_id'])
 
     mycursor.execute(sql, vals)
 
     mydb.commit()
 
-    print('\nThe new section of course ' + new_data['course_name'] + ' has been added.')
+    print('\nThe section has been edited.')
 
 
 ##################################################################################
-# Function: insert_into_sec_grades
+# Function: updateSecGrades
 # 
-# Purpose: Insert data into the sec_grades table of the database
+# Purpose: Updates the sec_grades table
 # 
 # Parameters:
-#        new_data: A dictionary of the data to be inserted
+#        attr: The attribute to be edited
+#        data: The new value for the attribute
+#        section: A dictionary for the primary key of the sec_grade (id)
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def insert_into_sec_grades(new_data, mycursor, mydb):
-    sql = """INSERT INTO sec_grades (section_id, A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, F, I, W)
-             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""" 
+def updateTopic(attr, data, section, mycursor, mydb):
+    sql = """UPDATE sec_grades SET """+attr+""" = %s
+             WHERE section_id = %s"""
 
-    vals = (new_data['section_id'], new_data['A+'], new_data['A'], new_data['A-'], new_data['B+'],
-            new_data['B'], new_data['B-'], new_data['C+'], new_data['C'], new_data['C-'],
-            new_data['D+'], new_data['D'], new_data['D-'], new_data['F'], new_data['I'], new_data['W'])
+    vals = (data, section['section_id'])
 
     mycursor.execute(sql, vals)
 
     mydb.commit()
 
-    print('\nThe new grade distribution has been added. Section id: '+new_data['section_id'])
+    print('\nThe section_grade has been edited.')
+
 
 ##################################################################################
-# Function: insert_into_goal_grades
+# Function: updateGoalGrades
 # 
-# Purpose: Insert data into the goal_grades table of the database
+# Purpose: Updates the goal_grades table
 # 
 # Parameters:
-#        new_data: A dictionary of the data to be inserted
+#        attr: The attribute to be edited
+#        data: The new value for the attribute
+#        goal: A dictionary for the primary key of the goal_grade (id)
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def insert_into_goal_grades(new_data, mycursor, mydb):
-    sql = """INSERT INTO goal_grades (goal_id, A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, F, I, W)
-             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""" 
+def updateTopic(attr, data, goal, mycursor, mydb):
+    sql = """UPDATE goal_grades SET """+attr+""" = %s
+             WHERE goal_id = %s"""
 
-    vals = (new_data['goal_id'], new_data['A+'], new_data['A'], new_data['A-'], new_data['B+'],
-            new_data['B'], new_data['B-'], new_data['C+'], new_data['C'], new_data['C-'],
-            new_data['D+'], new_data['D'], new_data['D-'], new_data['F'], new_data['I'], new_data['W'])
+    vals = (data, goal['goal_id'])
 
     mycursor.execute(sql, vals)
 
     mydb.commit()
 
-    print('\nThe new grade distribution has been added. Goal id: '+new_data['section_id'])
+    print('\nThe goal_grade has been edited.')
+
 
 ##################################################################################
-# Function: insert_into_course_goals
+# Function: updateCourseGoals
 # 
-# Purpose: Insert data into the course_goals table of the database
+# Purpose: Updates the course_goals table
 # 
 # Parameters:
-#        new_data: A dictionary of the data to be inserted
+#        attr: The attribute to be edited
+#        data: The new value for the attribute
+#        goal: A dictionary for the primary key of the course_goal (g_id, c_name)
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def insert_into_course_goals(new_data, mycursor, mydb):
-    sql = """INSERT INTO course_goals (course_name, goal_id)
-             VALUES (%s, %s);"""
+def updateTopic(attr, data, goal, mycursor, mydb):
+    sql = """UPDATE course_goals SET """+attr+""" = %s
+             WHERE goal_id = %s AND course_name = %s"""
 
-    vals = (new_data['course_name'], new_data['goal_id'])
+    vals = (data, goal['goal_id'], goal['course_name'])
 
     mycursor.execute(sql, vals)
 
     mydb.commit()
 
-    print('\nThe goal with id '+new_data['goal_id']+' has been added to the course '+new_data['course_name']+'.')
+    print('\nThe course-goal relationship has been edited.')
 
 
