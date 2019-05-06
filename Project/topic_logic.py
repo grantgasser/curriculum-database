@@ -26,7 +26,7 @@
 #
 # Parameters:
 #       target: A dictionary containing the primary key of the curriculum, as welll as
-#             the percentage of level 2 topic coverage required for Basic coverage
+#             the percentage of level 2 & 3 topic coverage required for coverage
 #       mycursor: The cursor to execute the queries for information
 #       mydb: The database in which the curriculum lies
 #######################################################################################
@@ -59,7 +59,7 @@ def calcCat(target, mycursor, mydb):
     mycursor.execute(topicSQL, vals)
     lvl1Units = mycursor.fetchall()
 
-    #Get all the subjects
+    #Get all the subjects for lvl 1 topics
     for K in lvl1Units:
         lvl1Subjects[K[0]] = 0
     #Get the units for each subject in lvl1 topics
@@ -69,6 +69,9 @@ def calcCat(target, mycursor, mydb):
     #Get the hours for the required courses
     mycursor.execute(reqSQL, vals)
     reqHrs = mycursor.fetchall()
+    #Get the hours for the optional courses
+    mycursor.execute(opSQL, vals)
+    opHrs = mycursor.fetchall()
 
     #Compare required hours with topic units
     for J in reqHrs:
@@ -85,8 +88,9 @@ def calcCat(target, mycursor, mydb):
     lvl2Subjects = {}
 
     mycursor.execute(topicSQL, vals)
-    lvl2Units = myvursor.fetchall()
+    lvl2Units = mycursor.fetchall()
 
+    #Populate lvl1 and lvl2 Subject maps
     for K in lvl1Units:
         lvl1Subjects[K[0]] = 0
     for M in lvl2Units:
@@ -95,14 +99,56 @@ def calcCat(target, mycursor, mydb):
         lvl2Subjects[S[0]] += S[1]
     for G in lvl2Units:
         lvl2Subjects[G[0]] += G[1]
-
+    
+    leftReqs = {}
+    for I in reqHrs:
+        if I[0] in lvl1Subjects:
+            leftReqs[I] = V-lvl1Subjects[I]
+    
     for I, V in lvl2Subjects:
-        if (V/reqHrs[I])*100 < target['min_cover']:
+        if I not in leftReqs:
             return 'Unsatisfactory'
 
     for I, V in lvl2Subjects:
-        if (V/reqHrs[I])*100 < 100:
+        if (leftReqs[I]) < (lvl2Subjects[I]*(target['min_cover2']/100)):
             return 'Unsatisfactory'
+    
+    #Find outif lvl 2 is fully covered by required courses or not
+    bool l2Covered = True
+    for I, V in lvl2Subjects:
+        if (leftReqs[I] < lvl2Subjects[I])
+            l2Covered = False
+    if l2Covered:
+        for I, V in leftReqs:
+            if I in lvl2Subjects:
+                leftReqs[I] -= lvl2Subjects[I]
+        for J in opHrs:
+            if J[0] in leftReqs:
+                leftReqs[I] += opHrs[1]
+        vals[2] = 3
+        lvl3Subjects = {}
+        mycursor.execute(topicSQL, vals)
+        lvl3Units = mycursor.fetchall()
+        for K in lvl3Units:
+            if K[0] in lvl3Subjects:
+                lvl3Subjects[K[0]] = 0
+            else:
+                lvl3Subjects[K[0]] += k[1]
 
+        for I, V in lvl3Subjects:
+            if I in leftReqs:
+                if leftReqs[I] < (lvl3Subjects*(target['min_cover3']/100)):
+                    return 'Inclusive'
+            else:
+                return 'Inclusive'
+        return 'Extensive'
+
+    else:
+        for I, V in lvl2Subjects:
+            if I not in opHrs:
+                return 'Basic'
+            if (leftReqs[I]+opHrs[I])) < lvl2Subjects[I]:
+                return 'Basic'
+        return 'Basic-Plus'
 
 
