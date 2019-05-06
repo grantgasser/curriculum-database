@@ -206,7 +206,7 @@ def insert_into_section(new_data, mycursor, mydb):
 #        mydb: The database in which the table lies
 ##################################################################################
 def insert_into_sec_grades(new_data, mycursor, mydb):
-    sql = """INSERT INTO sec_grades (section_id, A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, F, I, W)
+    sql = """INSERT INTO sec_grades
              VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"""
 
     vals = (new_data['section_id'], new_data['A+'], new_data['A'], new_data['A-'], new_data['B+'],
@@ -230,7 +230,7 @@ def insert_into_sec_grades(new_data, mycursor, mydb):
 #        mydb: The database in which the table lies
 ##################################################################################
 def insert_into_goal_grades(new_data, mycursor, mydb):
-    sql = """INSERT INTO goal_grades (goal_id, A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, F, I, W)
+    sql = """INSERT INTO goal_grades
              VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"""
 
     vals = (new_data['goal_id'], new_data['A+'], new_data['A'], new_data['A-'], new_data['B+'],
