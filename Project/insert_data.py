@@ -181,11 +181,11 @@ def insert_into_goals(new_data, mycursor, mydb):
 #        mydb: The database in which the table lies
 ##################################################################################
 def insert_into_section(new_data, mycursor, mydb):
-    sql = """INSERT INTO section (section_id, course_name, semester, num_stu, comment1, comment2)
-             VALUES (%s, %s, %s, %s, %s, %s);"""
+    sql = """INSERT INTO section (section_id, course_name, semester, year, num_stu, comment1, comment2)
+             VALUES (%s, %s, %s, %s, %s, %s, %s);"""
 
     vals = (new_data['section_id'], new_data['course_name'], new_data['semester'],
-            new_data['num_stu'], new_data['comment1'], new_data['comment2'])
+            new_data['year'], new_data['num_stu'], new_data['comment1'], new_data['comment2'])
 
     mycursor.execute(sql, vals)
 

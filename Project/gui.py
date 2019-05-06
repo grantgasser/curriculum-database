@@ -15,6 +15,12 @@ COURSE_ATTR = ['course_name', 'subj_code', 'course_no', 'cred_hrs', 'description
 CURRIC_REQS_ATTR = ['course_name', 'req_for']
 CURRIC_OPS_ATTR = ['course_name', 'op_for']
 TOPIC_ATTR = ['topic_id', 'topic_name', 'lvl', 'subject', 'units']
+TOPIC_CURRIC_ATTR = ['topic_id', 'curric_assoc']
+GOALS_ATTR = ['goal_id', 'description', 'curric_name']
+SECTION_ATTR = ['section_id', 'course_name', 'semester', 'year', 'num_stu', 'comment1', 'comment2']
+#SEC_GRADES_ATTR = ['']
+#GOAL_GRADES_ATTR = []
+COURSE_GOALS_ATTR = ['course_name', 'goal_id']
 
 class MyGUI:
     def __init__(self, mycursor, mydb):
@@ -27,6 +33,10 @@ class MyGUI:
         self.new_curric_reqs_data = {}
         self.new_curric_ops_data = {}
         self.new_topic_data = {}
+        self.new_topic_curric_data = {}
+        self.new_goals_data = {}
+        self.new_section_data = {}
+        self.new_course_goals_data = {}
 
         self.main_window = tk.Tk()
 
@@ -62,6 +72,10 @@ class MyGUI:
         self.input_menu_button.menu.add_command(label='topic', command=lambda:self.display_text('topic'))
         self.input_menu_button.menu.add_command(label='curric_reqs', command=lambda:self.display_text('curric_reqs'))
         self.input_menu_button.menu.add_command(label='curric_ops', command=lambda:self.display_text('curric_ops'))
+        self.input_menu_button.menu.add_command(label='topic_curric', command=lambda:self.display_text('topic_curric'))
+        self.input_menu_button.menu.add_command(label='goals', command=lambda:self.display_text('goals'))
+        self.input_menu_button.menu.add_command(label='section', command=lambda:self.display_text('section'))
+        self.input_menu_button.menu.add_command(label='course_goals', command=lambda:self.display_text('course_goals'))
         self.input_menu_button.menu.add_command(label='Get Curriculum', command=lambda:self.get_curric())#CHANGE
         self.input_menu_button.place(relwidth=0.15, relheight=.2)
 
@@ -129,6 +143,18 @@ class MyGUI:
         elif table_name == 'topic':
             self.insert_label_attr['text'] = 'Please enter ' + TOPIC_ATTR[self.attr]
             table_dict = TOPIC_ATTR
+        elif table_name == 'topic_curric':
+            self.insert_label_attr['text'] = 'Please enter ' + TOPIC_CURRIC_ATTR[self.attr]
+            table_dict = TOPIC_CURRIC_ATTR
+        elif table_name == 'goals':
+            self.insert_label_attr['text'] = 'Please enter ' + GOALS_ATTR[self.attr]
+            table_dict = GOALS_ATTR
+        elif table_name == 'section':
+            self.insert_label_attr['text'] = 'Please enter ' + SECTION_ATTR[self.attr]
+            table_dict = SECTION_ATTR
+        elif table_name == 'course_goals':
+            self.insert_label_attr['text'] = 'Please enter ' + COURSE_GOALS_ATTR[self.attr]
+            table_dict = COURSE_GOALS_ATTR
 
 
         self.entry = tk.Entry(self.top_frame, font=40)
@@ -171,6 +197,14 @@ class MyGUI:
                 ins.insert_into_ops(self.new_curric_ops_data, self.cursor, self.db)
             elif table_name == 'topic':
                 ins.insert_into_topic(self.new_topic_data, self.cursor, self.db)
+            elif table_name == 'topic_curric':
+                ins.insert_into_topic_curric(self.new_topic_curric_data, self.cursor, self.db)
+            elif table_name == 'goals':
+                ins.insert_into_goals(self.new_goals_data, self.cursor, self.db)
+            elif table_name == 'section':
+                ins.insert_into_section(self.new_section_data, self.cursor, self.db)
+            elif table_name == 'course_goals':
+                ins.insert_into_course_goals(self.new_course_goals_data, self.cursor, self.db)
 
 
     #FUNCTIONS FOR INSERTING DATA
@@ -188,6 +222,15 @@ class MyGUI:
             self.new_curric_ops_data[table_dict[self.attr]] = input
         elif table_name == 'topic':
             self.new_topic_data[table_dict[self.attr]] = input
+        elif table_name == 'topic_curric':
+            self.new_topic_curric_data[table_dict[self.attr]] = input
+        elif table_name == 'goals':
+            self.new_goals_data[table_dict[self.attr]] = input
+        elif table_name == 'section':
+            self.new_section_data[table_dict[self.attr]] = input
+        elif table_name == 'course_goals':
+            self.new_course_goals_data[table_dict[self.attr]] = input
+
 
         #destroy
         #self.insert_label.destroy()
