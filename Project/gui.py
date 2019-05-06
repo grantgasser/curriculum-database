@@ -10,7 +10,7 @@ WIDTH = 800
 
 #attr = 0
 
-CURRIC_ATTR = ['curric_name', 'person_id', 'person_name', 'min_hours', 'min_cover2', 'min_cover3']
+CURRIC_ATTR = ['curric_name', 'person_name', 'person_id', 'min_hours', 'min_cover2', 'min_cover3']
 COURSE_ATTR = ['course_name', 'subj_code', 'course_no', 'cred_hrs', 'description']
 CURRIC_REQS_ATTR = ['course_name', 'req_for']
 CURRIC_OPS_ATTR = ['course_name', 'op_for']
@@ -18,16 +18,21 @@ TOPIC_ATTR = ['topic_id', 'topic_name', 'lvl', 'subject', 'units']
 TOPIC_CURRIC_ATTR = ['topic_id', 'curric_assoc']
 GOALS_ATTR = ['goal_id', 'description', 'curric_name']
 SECTION_ATTR = ['section_id', 'course_name', 'semester', 'year', 'num_stu', 'comment1', 'comment2']
-#SEC_GRADES_ATTR = ['']
-#GOAL_GRADES_ATTR = []
+SEC_GRADES_ATTR = ['section_id', 'A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F', 'I', 'W']
+GOAL_GRADES_ATTR = ['goal_id', 'A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F', 'I', 'W']
 COURSE_GOALS_ATTR = ['course_name', 'goal_id']
+
+#keys
+CURRIC_KEYS = ['curric_name', 'person_id']
 
 class MyGUI:
     def __init__(self, mycursor, mydb):
         self.cursor = mycursor
         self.db = mydb
         self.attr = 0
+        self.curric_keys = 0
 
+        #for inserting data
         self.new_curric_data = {}
         self.new_course_data = {}
         self.new_curric_reqs_data = {}
@@ -37,8 +42,17 @@ class MyGUI:
         self.new_goals_data = {}
         self.new_section_data = {}
         self.new_course_goals_data = {}
+        self.new_sec_grades_data = {}
+        self.new_goal_grades_data = {}
+
+        #for querying data
+        self.curric_query = [] #user will enter keys, stored here
 
         self.main_window = tk.Tk()
+
+        #self.background_image = tk.PhotoImage(file='background.jpg')
+        #self.background_label = tk.Label(root, image=background_image)
+        #self.background_label.place(relwidth=1, relheight=1)
 
         self.main_window.title('Curriculum Database Application')
 
@@ -76,28 +90,52 @@ class MyGUI:
         self.input_menu_button.menu.add_command(label='goals', command=lambda:self.display_text('goals'))
         self.input_menu_button.menu.add_command(label='section', command=lambda:self.display_text('section'))
         self.input_menu_button.menu.add_command(label='course_goals', command=lambda:self.display_text('course_goals'))
-        self.input_menu_button.menu.add_command(label='Get Curriculum', command=lambda:self.get_curric())#CHANGE
+        self.input_menu_button.menu.add_command(label='sec_grades', command=lambda:self.display_text('sec_grades'))
+        self.input_menu_button.menu.add_command(label='goal_grades', command=lambda:self.display_text('goal_grades'))
+        #self.input_menu_button.menu.add_command(label='Get Curriculum', command=lambda:self.get_curric())#CHANGE
         self.input_menu_button.place(relwidth=0.15, relheight=.2)
 
         self.mid_label = tk.Label(self.main_window, anchor='nw', font=('Times', '12'))
         self.mid_label.place(relx=0.5, rely=0.42, relwidth=0.75, relheight=0.05, anchor='n')
-        self.mid_label['text'] = 'Update Existing Data'
+        self.mid_label['text'] = 'Query Existing Data'
 
         self.mid_frame = tk.Frame(self.main_window, bg='#a3a3c2', bd=2)
         self.mid_frame.place(relx=.5, rely=.45, relwidth=.75, relheight=0.2, anchor='n')
 
+        self.mid_curric_label = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
+        self.mid_curric_label.place(relx=.10, rely=0, relwidth=.2, relheight=0.15, anchor='n')
+        self.mid_curric_label['text'] = 'Query Curriculum Data'
+
+        self.mid_curric_label_attr = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
+        self.mid_curric_label_attr.place(relx=.10, rely=.2, relwidth=.2, relheight=0.15, anchor='n')
+        self.mid_curric_label_attr['text'] = 'Enter curric_name'
+
+        self.mid_curric_entry = tk.Entry(self.mid_frame, font=25)
+        self.mid_curric_entry.place(relx=0, rely=.4, relwidth=.2, relheight=.2)
+
+        self.mid_curric_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda: self.curric_query(self.mid_curric_entry.get()))
+        self.mid_curric_button.place(relx=.21, rely=.4, relwidth = .06, relheight=.2)
+
 
         self.bottom_label = tk.Label(self.main_window, anchor='nw', font=('Times', '12'))
         self.bottom_label.place(relx=0.5, rely=0.67, relwidth=0.75, relheight=0.05, anchor='n')
-        self.bottom_label['text'] = 'Query Existing Data'
+        self.bottom_label['text'] = 'Update Existing Data'
 
         self.bottom_frame = tk.Frame(self.main_window, bg='#a3a3c2', bd=2)
         self.bottom_frame.place(relx=.5, rely=.7, relwidth=.75, relheight=0.2, anchor='n')
 
-
         #run
         self.main_window.mainloop()
 
+
+
+    def next_curric_attr(self):
+        print(len(curric_query))
+
+
+    def curric_query(self, input):
+        print(input)
+        curric_query.append(input)
 
 
     def show_tables(self):
@@ -113,19 +151,19 @@ class MyGUI:
             i += 1
 
 
-    def click_input_option(self, tbl_name):
-        print('You clicked ' + tbl_name)
+    def click_input_option(self, input):
+        print('You clicked ' + input)
 
 
     def display_text(self, table_name):
         self.attr = 0
 
         self.insert_label = tk.Label(self.top_frame, font=('Times', '12'))
-        self.insert_label.place(relx =.5, rely=.3, relwidth=0.25, relheight=.15)
+        self.insert_label.place(relx =.35, rely=.2, relwidth=0.25, relheight=.15)
         self.insert_label['text'] = 'Please enter ' + table_name + ' data.'
 
         self.insert_label_attr = tk.Label(self.top_frame, font=('Times', '12'))
-        self.insert_label_attr.place(relx =.5, rely=.55, relwidth=0.2, relheight=.15)
+        self.insert_label_attr.place(relx =.35, rely=.45, relwidth=0.25, relheight=.15)
 
         table_dict = {}
         if table_name == 'curriculum':
@@ -152,16 +190,22 @@ class MyGUI:
         elif table_name == 'section':
             self.insert_label_attr['text'] = 'Please enter ' + SECTION_ATTR[self.attr]
             table_dict = SECTION_ATTR
+        elif table_name == 'sec_grades':
+            self.insert_label_attr['text'] = 'Please enter ' + SEC_GRADES_ATTR[self.attr]
+            table_dict = SEC_GRADES_ATTR
+        elif table_name == 'goal_grades':
+            self.insert_label_attr['text'] = 'Please enter ' + GOAL_GRADES_ATTR[self.attr]
+            table_dict = GOAL_GRADES_ATTR
         elif table_name == 'course_goals':
             self.insert_label_attr['text'] = 'Please enter ' + COURSE_GOALS_ATTR[self.attr]
             table_dict = COURSE_GOALS_ATTR
 
 
-        self.entry = tk.Entry(self.top_frame, font=40)
-        self.entry.place(relx =.5, rely=.75, relwidth=0.2, relheight=.2)
+        self.entry = tk.Entry(self.top_frame, font=25)
+        self.entry.place(relx =.35, rely=.7, relwidth=0.2, relheight=.2)
 
         self.button = tk.Button(self.top_frame, text="Enter", font=40, command=lambda: [self.insert_data(self.entry.get(), table_name, table_dict), self.change_attr(table_name, table_dict)])
-        self.button.place(relx=0.75, rely=.75, relwidth=0.2, relheight=0.2)
+        self.button.place(relx=0.6, rely=.7, relwidth=0.2, relheight=0.2)
 
     def change_attr(self, table_name, table_dict):
         self.attr += 1
@@ -173,16 +217,16 @@ class MyGUI:
 
             #change attribute that we are collecting
             self.insert_label_attr = tk.Label(self.top_frame, font=('Times', '12'))
-            self.insert_label_attr.place(relx =.5, rely=.55, relwidth=0.2, relheight=.15)
+            self.insert_label_attr.place(relx =.35, rely=.45, relwidth=0.25, relheight=.15)
             self.insert_label_attr['text'] = 'Please enter ' + table_dict[self.attr]
 
             #reset entry
-            self.entry = tk.Entry(self.top_frame, font=40)
-            self.entry.place(relx =.5, rely=.75, relwidth=0.2, relheight=.2)
+            self.entry = tk.Entry(self.top_frame, font=25)
+            self.entry.place(relx =.35, rely=.7, relwidth=0.2, relheight=.2)
 
             #reset button
             self.button = tk.Button(self.top_frame, text="Enter", font=40, command=lambda: [self.insert_data(self.entry.get(), table_name, table_dict), self.change_attr(table_name, table_dict)])
-            self.button.place(relx=0.75, rely=.75, relwidth=0.2, relheight=0.2)
+            self.button.place(relx=0.6, rely=.7, relwidth=0.2, relheight=0.2)
 
         #cannot accept any more values, so insert into table
         else:
@@ -203,6 +247,10 @@ class MyGUI:
                 ins.insert_into_goals(self.new_goals_data, self.cursor, self.db)
             elif table_name == 'section':
                 ins.insert_into_section(self.new_section_data, self.cursor, self.db)
+            elif table_name == 'sec_grades':
+                ins.insert_into_sec_grades(self.new_sec_grades_data, self.cursor, self.db)
+            elif table_name == 'goal_grades':
+                ins.insert_into_goal_grades(self.new_goal_grades_data, self.cursor, self.db)
             elif table_name == 'course_goals':
                 ins.insert_into_course_goals(self.new_course_goals_data, self.cursor, self.db)
 
@@ -228,6 +276,10 @@ class MyGUI:
             self.new_goals_data[table_dict[self.attr]] = input
         elif table_name == 'section':
             self.new_section_data[table_dict[self.attr]] = input
+        elif table_name == 'sec_grades':
+            self.new_sec_grades_data[table_dict[self.attr]] = input
+        elif table_name == 'goal_grades':
+            self.new_goal_grades_data[table_dict[self.attr]] = input
         elif table_name == 'course_goals':
             self.new_course_goals_data[table_dict[self.attr]] = input
 
@@ -253,3 +305,9 @@ class MyGUI:
 
         for tuple in result:
             print(tuple)
+
+
+
+
+#--------------------------------------------------------------------------
+    #FUNCTIONS FOR UPDATE DATA
