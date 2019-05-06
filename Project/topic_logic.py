@@ -25,7 +25,8 @@
 #       Substandard: Some level 1 topics are NOT covered by required courses.
 #
 # Parameters:
-#       target: A dictionary containing the primary key of the curriculum
+#       target: A dictionary containing the primary key of the curriculum, as welll as
+#             the percentage of level 2 topic coverage required for Basic coverage
 #       mycursor: The cursor to execute the queries for information
 #       mydb: The database in which the curriculum lies
 #######################################################################################
@@ -71,15 +72,37 @@ def calcCat(target, mycursor, mydb):
 
     #Compare required hours with topic units
     for J in reqHrs:
-        lvl1Subjects[J[0]] -= J[1]
+        if J[0] in lvl1Subjects:
+            lvl1Subjects[J[0]] -= J[1]
 
     #If the hours are positive for any subject, it is Substandard coverage
     for I, V in lvl1Subjects:
         if V > 0:
             return 'Substandard'
 
+    #Now check if it has enough required hours for level 2 topics
+    vals[2] = 2
+    lvl2Subjects = {}
 
-    
+    mycursor.execute(topicSQL, vals)
+    lvl2Units = myvursor.fetchall()
+
+    for K in lvl1Units:
+        lvl1Subjects[K[0]] = 0
+    for M in lvl2Units:
+        lvl2Subjects[M[0]] = 0
+    for S in lvl1Units:
+        lvl2Subjects[S[0]] += S[1]
+    for G in lvl2Units:
+        lvl2Subjects[G[0]] += G[1]
+
+    for I, V in lvl2Subjects:
+        if (V/reqHrs[I])*100 < target['min_cover']:
+            return 'Unsatisfactory'
+
+    for I, V in lvl2Subjects:
+        if (V/reqHrs[I])*100 < 100:
+            return 'Unsatisfactory'
 
 
 

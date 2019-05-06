@@ -10,7 +10,7 @@ WIDTH = 800
 
 #attr = 0
 
-CURRIC_ATTR = ['curric_name', 'person_id', 'person_name', 'min_hours', 'min_cover']
+CURRIC_ATTR = ['curric_name', 'person_id', 'person_name', 'min_hours', 'min_cover2', 'min_cover3']
 COURSE_ATTR = ['course_name', 'subj_code', 'course_no', 'cred_hrs', 'description']
 CURRIC_REQS_ATTR = ['course_name', 'req_for']
 CURRIC_OPS_ATTR = ['course_name', 'op_for']
