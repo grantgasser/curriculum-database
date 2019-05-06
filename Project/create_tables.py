@@ -48,7 +48,7 @@ def create_tables(mycursor):
             `topic_id` int NOT NULL,
             `topic_name` VARCHAR(25) NOT NULL,
             `lvl` int NOT NULL,
-            `subject` VARCHAR(25) NOT NULL,
+            `subject` VARCHAR(5) NOT NULL,
             `units` FLOAT NOT NULL,
             PRIMARY KEY(`topic_id`, `topic_name`))
             ENGINE=InnoDB, DEFAULT CHARSET=latin1

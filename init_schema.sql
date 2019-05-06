@@ -44,7 +44,6 @@ DROP TABLE IF EXISTS `curric_reqs`;
 CREATE TABLE IF NOT EXISTS `curric_reqs`(
    `course_name` VARCHAR(25) NOT NULL,
    `req_for` VARCHAR(25) NOT NULL,
-   PRIMARY KEY (`course_name`),
    FOREIGN KEY (`course_name`) REFERENCES `courses`(`course_name`))
    ENGINE=InnoDB, DEFAULT CHARSET=latin1;
 
@@ -53,7 +52,6 @@ DROP TABLE IF EXISTS `curric_ops`;
 CREATE TABLE IF NOT EXISTS `curric_ops`(
    `course_name` VARCHAR(25) NOT NULL,
    `op_for` VARCHAR(25) NOT NULL,
-   PRIMARY KEY (`course_name`),
    FOREIGN KEY (`course_name`) REFERENCES `courses`(`course_name`))
    ENGINE=InnoDB, DEFAULT CHARSET=latin1;
 
@@ -63,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `topic`(
    `topic_id` int NOT NULL,
    `topic_name` VARCHAR(25) NOT NULL,
    `lvl` int NOT NULL,
-   `subject` VARCHAR(25) NOT NULL,
+   `subject` VARCHAR(5) NOT NULL,
    `units` FLOAT NOT NULL,
    PRIMARY KEY(`topic_id`, `topic_name`))
    ENGINE=InnoDB, DEFAULT CHARSET=latin1;
@@ -157,3 +155,4 @@ CREATE TABLE IF NOT EXISTS `course_goals`(
    FOREIGN KEY (`course_name`) REFERENCES `courses`(`course_name`),
    FOREIGN KEY (`goal_id`) REFERENCES `goals`(`goal_id`))
    ENGINE=InnoDB, DEFAULT CHARSET=latin1;
+
