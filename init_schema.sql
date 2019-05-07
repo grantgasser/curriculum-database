@@ -84,6 +84,7 @@ CREATE TABLE IF NOT EXISTS `goals`(
    `goal_id` int NOT NULL,
    `description` VARCHAR(255) NOT NULL,
    `curric_name` VARCHAR(25) NOT NULL,
+   `goal_hrs` int NOT NULL,
    PRIMARY KEY (`goal_id`),
    FOREIGN KEY (`curric_name`) REFERENCES `curriculum`(`curric_name`))
    ENGINE=InnoDB, DEFAULT CHARSET=latin1;

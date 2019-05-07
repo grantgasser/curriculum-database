@@ -159,10 +159,10 @@ def insert_into_topic_curric(new_data, mycursor, mydb):
 #        mydb: The database in which the table lies
 ##################################################################################
 def insert_into_goals(new_data, mycursor, mydb):
-    sql = """INSERT INTO goals(goal_id, description, curric_name)
-             VALUES (%s, %s, %s);"""
+    sql = """INSERT INTO goals(goal_id, description, curric_name, goal_hrs)
+             VALUES (%s, %s, %s, %s);"""
 
-    vals = (new_data['goal_id'], new_data['description'], new_data['curric_name'])
+    vals = (new_data['goal_id'], new_data['description'], new_data['curric_name'], new_data['goal_hrs'])
 
     mycursor.execute(sql, vals)
 

@@ -141,7 +141,7 @@ def updateTopic(attr, data, topic, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateTopic(attr, data, topic, mycursor, mydb):
+def updateTopicCurric(attr, data, topic, mycursor, mydb):
     sql = """UPDATE topic_curric SET """+attr+""" = %s
              WHERE topic_id = %s"""
 
@@ -166,7 +166,7 @@ def updateTopic(attr, data, topic, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateTopic(attr, data, goal, mycursor, mydb):
+def updateGoals(attr, data, goal, mycursor, mydb):
     sql = """UPDATE goals SET """+attr+""" = %s
              WHERE goal_id = %s"""
 
