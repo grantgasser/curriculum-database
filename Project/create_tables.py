@@ -71,7 +71,7 @@ def create_tables(mycursor):
             `goal_id` int NOT NULL CHECK (goal_id >= 0),
             `description` VARCHAR(255) NOT NULL,
             `curric_name` VARCHAR(25) NOT NULL,
-            `goal_hrs` int NOT NULL CHECK (goal_hrs >- 0),
+            `goal_hrs` int NOT NULL CHECK (goal_hrs >= 0),
             PRIMARY KEY (`goal_id`),
             FOREIGN KEY (`curric_name`) REFERENCES `curriculum`(`curric_name`))
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
