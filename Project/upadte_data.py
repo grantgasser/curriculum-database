@@ -20,7 +20,7 @@ def updateCurriculum(attr, data, curric, mycursor, mydb):
     sql = """UPDATE curriculum SET """+attr+""" = %s
              WHERE curric_name = %s AND person_id = %s""" 
 
-    vals = (new_data[attr], target['curric_name'], target['person_id'])
+    vals = (attr, data, curric['curric_name'], curric['person_id'])
 
     mycursor.execute(sql, vals)
 
@@ -43,9 +43,9 @@ def updateCurriculum(attr, data, curric, mycursor, mydb):
 ##################################################################################
 def updateCourses(attr, data, course, mycursor, mydb):
     sql = """UPDATE courses SET """+attr+""" = %s
-             WHERE course_name = """+course
+             WHERE course_name = %s"""
 
-    vals = (data)
+    vals = (data, course['course_name'])
 
     mycursor.execute(sql, vals)
 
@@ -191,7 +191,7 @@ def updateGoals(attr, data, goal, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateTopic(attr, data, section, mycursor, mydb):
+def updateSection(attr, data, section, mycursor, mydb):
     sql = """UPDATE section SET """+attr+""" = %s
              WHERE section_id = %s"""
 
@@ -216,7 +216,7 @@ def updateTopic(attr, data, section, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateTopic(attr, data, section, mycursor, mydb):
+def updateSecGrades(attr, data, section, mycursor, mydb):
     sql = """UPDATE sec_grades SET """+attr+""" = %s
              WHERE section_id = %s"""
 
@@ -241,7 +241,7 @@ def updateTopic(attr, data, section, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateTopic(attr, data, goal, mycursor, mydb):
+def updateGoalGrades(attr, data, goal, mycursor, mydb):
     sql = """UPDATE goal_grades SET """+attr+""" = %s
              WHERE goal_id = %s"""
 
@@ -266,7 +266,7 @@ def updateTopic(attr, data, goal, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateTopic(attr, data, goal, mycursor, mydb):
+def updateCourseGoals(attr, data, goal, mycursor, mydb):
     sql = """UPDATE course_goals SET """+attr+""" = %s
              WHERE goal_id = %s AND course_name = %s"""
 
