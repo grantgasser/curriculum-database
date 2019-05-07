@@ -52,10 +52,6 @@ def get_course(course_name, mycursor):
 
 	vals = (course_name,)
 
-	#req = get_reqs(course_name,mycursor)
-
-	#ops = get_ops(course_name,mycursor)
-
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
 
@@ -80,64 +76,26 @@ def get_ops_given_course(course_name,mycursor):
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
 
-def get_section(curric_name,course_name,year1, year2, mycursor):
+#------------------------------------------------------------------------------
 
-	sql = """SELECT *
-			 FROM   sec_grades NATURAL JOIN section
-			 WHERE  course_name = %s
-			 AND year BETWEEN %s AND %s
-			 AND course_name IN (SELECT course_name
-			 					 FROM curric_reqs NATURAL JOIN curric_ops
-			 					 WHERE op_for = %s OR req_for = %s)
-		   """
+def get_section(curric_name,course_name,year1,year2, mycursor):
 
-	vals = (course_name,year1, year2, curric_name, curric_name)
+	sql = """SELECT * 
+			 FROM   sec_grades  
+			 WHERE  section_id IN (SELECT DISTINCT section_id
+								   FROM curric_reqs NATURAL JOIN curric_ops NATURAL JOIN section 
+								   WHERE course_name = %s 
+								   AND (op_for = %s OR req_for = %s) 
+								   AND year BETWEEN %s AND %s)
+			GROUP BY section_id
+		 """
 
-	mycursor.execute(sql,vals)
-	return mycursor.fetchall();
-
-
-def get_curric_dash(curric_name,mycursor):
-#query incomplete
-	sql = """SELECT curric_name,person_name,COUNT)
-		  COUNT(DISTINCT curric_reqs.course_name),COUNT(DISTINCT curric_op.course_name),
-		  	 FROM curriculum NATURAL JOIN curric_ops, NATURAL JOIN curric_reqs
-		  	 WHERE  curric_name = %s"""
-
-	cntReq = count_req_courses_for_curric(curric_name,mycursor)
-
-	cntOpt = count_op_courses_for_curric(curric_name,mycursor)
-
-	topCat = calcCat(curric_name,mycursor)
-
-	vals = (curric_name)
-
-	mycursor.execute(sql,vals)
-	mycursor.fetchall(cntReq,cntOpt)
-
-def count_req_courses_for_curric(curric_name,mycursor):
-	sql = """SELECT COUNT(DISTINCT course_name)
-	         FROM curric_reqs
-	         WHERE req_for = %s """
-
-	vals = (curric_name)
+	vals = (curric_name,course_name,year1,year2)
 
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
 
-def count_op_courses_for_curric(curric_name,mycursor):
-	sql = """SELECT COUNT(DISTINCT course_name)
-	         FROM curric_ops
-	         WHERE op_for = %s """
-
-	vals = (curric_name)
-
-	mycursor.execute(sql,vals)
-	return mycursor.fetchall()
-
-
-
-
+#------------------------------------------------------------------------------
 
 '''
 	def get_curric_distr(semester1,semester2,year,mycursor):
@@ -146,3 +104,52 @@ def count_op_courses_for_curric(curric_name,mycursor):
 	mycursor.execute(sql,vals)
 	mycursor.fetchall()
 '''
+
+#------------------------------------------------------------------------------
+def get_curric_dash(curric_name,mycursor):
+
+	sql = """SELECT curric_name,person_name
+		  	 FROM curriculum NATURAL JOIN curric_ops, NATURAL JOIN curric_reqs
+		  	 WHERE  curric_name = %s"""
+
+	vals = (curric_name,)
+
+	mycursor.execute(sql,vals)
+	mycursor.fetchall(cntReq,cntOpt)
+
+def count_req_courses_given_curric(curric_name,mycursor):
+
+	sql = """SELECT COUNT(DISTINCT course_name)
+	         FROM curric_reqs
+	         WHERE req_for = %s """
+
+	vals = (curric_name,)
+
+	mycursor.execute(sql,vals)
+	return mycursor.fetchall()
+
+def count_op_courses_given_curric(curric_name,mycursor):
+	sql = """SELECT COUNT(DISTINCT course_name)
+	         FROM curric_ops
+	         WHERE op_for = %s """
+
+	vals = (curric_name,)
+
+	mycursor.execute(sql,vals)
+	return mycursor.fetchall()
+
+
+def count_total_credits_given_curric(curric_name):
+	sql = """SELECT SUM(cred_hrs)
+	         FROM course
+	         WHERE course_name %s """
+
+def count_levels_given_curric(curric_name,mycursor):
+	sql = """SELECT COUNT(lvl)
+			 FROM topic NATURAL JOIN topic_curric
+			 WHERE curric_assoc = %s"""
+
+	vals = (curric_name,)
+
+	mycursor.execute(sql,vals)
+	return mycursor.fetchall()
