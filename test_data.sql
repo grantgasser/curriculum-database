@@ -6,18 +6,30 @@
 
 USE curriculum_db;
 
--- Create Curriculums
+-- Delete old data
+DELETE FROM sec_grades;
+DELETE FROM goal_grades;
+DELETE FROM course_goals;
+DELETE FROM curric_reqs;
+DELETE FROM curric_ops;
+DELETE FROM topic_curric;
+DELETE FROM section;
+DELETE FROM goals;
+DELETE FROM courses;
+DELETE FROM topic;
 DELETE FROM curriculum;
-INSERT INTO curriculum (curric_name, person_name, person_id, min_hours)
-	VALUES ('Computer Science', 'John Doe', '000', 10),
-	('Math', 'Jim Beam', '001', 10),
-	('English', 'Mr. Bean', '010', 15),
-	('Science', 'Simaris', '011', 20);
+
+-- Create Curriculums
+INSERT INTO curriculum (curric_name, person_name, person_id, min_hours, min_cover2, min_cover3)
+	VALUES ('Computer Science', 'John Doe', '000', 10, 5, 5),
+	('Math', 'Jim Beam', '001', 10, 5, 5),
+	('English', 'Mr. Bean', '010', 15, 5, 5),
+	('Science', 'Simaris', '011', 20, 5, 5);
 
 -- Create Goals
-DELETE FROM goals;
-INSERT INTO goals VALUES (1, 'Computers', 'Computer Science', 5),
-			(2, 'Computers2', 'Coputer Science', 5),
+INSERT INTO goals (goal_id, description, curric_name, goal_hrs)
+			VALUES (1, 'Computers', 'Computer Science', 5),
+			(2, 'Computers2', 'Computer Science', 5),
 			(3, 'Maths', 'Math', 5),
 			(4, 'Maths2', 'Math', 5), 
 			(5, 'Engrish', 'English', 5), 
@@ -25,24 +37,32 @@ INSERT INTO goals VALUES (1, 'Computers', 'Computer Science', 5),
 			(7, 'Singlish', 'English', 5),
 			(8, 'Space', 'Science', 5), 
 			(9, 'Space2', 'Science', 5), 
-			(10, 'Space3', 'Science', 10);
+			(10,'Space3', 'Science', 10);
 
 -- Create Courses
-DELETE FROM courses;
 INSERT INTO courses (course_name, subj_code, course_no, cred_hrs, description)
 	VALUES ('Computers', '0000', 1, 5, 'Computers'),
 	('Writing', '0001', 2, 5, 'English'),
 	('Reading', '0001', 3, 5, 'English'),
 	('Arithmetic', '0010', 4, 5, 'Math'),
 	('Statistics', '0010', 5, 5, 'Math'),
-	('Calculus', ; '0010', 6, 5, 'Math'),
+	('Calculus', '0010', 6, 5, 'Math'),
 	('Journalism', '0001', 7, 5, 'English'),
 	('Chemestry', '0011', 8, 5, 'Science'),
 	('Physics', '0011', 9, 5, 'Science'),
 	('Geology', '0011', 10, 5, 'Science');
 
+-- Create Course Goals
+INSERT INTO course_goals VALUES ('Computers', 1),
+				('Arithmetic', 2),
+				('Writing', 5),
+				('Reading', 6),
+				('Journalism', 7),
+				('Chemestry', 8),
+				('Physics', 9),
+				('Geology', 10);
+
 -- Create Course Reqs
-DELETE FROM curric_reqs;
 INSERT INTO curric_reqs VALUES ('Computers', 'Computer Science'),
 				('Computers', 'Science'),
 				('Computers', 'Math'),
@@ -67,7 +87,6 @@ INSERT INTO curric_reqs VALUES ('Computers', 'Computer Science'),
 				('Geology', 'Science');
 
 -- Create Course Options
-DELETE FROM curric_ops;
 INSERT INTO curric_ops VALUES ('Reading', 'Computer Science'),
 				('Reading', 'Math'),
 				('Statistics', 'Computer Science'),
@@ -78,8 +97,7 @@ INSERT INTO curric_ops VALUES ('Reading', 'Computer Science'),
 				('Geology', 'Math');
 
 --  Create Sections
-DELETE FROM sections;
-INSERT INTO sections VALUES (1, 'Computers', 'FALL', 0000, 20, 'no', 'comment'),
+INSERT INTO section VALUES (1, 'Computers', 'FALL', 0000, 20, 'no', 'comment'),
 			(2, 'Computers', 'WINTER', 0000, 21, 'no', 'comment'),
 			(3, 'Computers', 'SPRING', 0000, 22, 'no', 'comment'),
 			(4, 'Computers', 'SUMMER', 0000, 23, 'no', 'comment'),
@@ -138,8 +156,20 @@ INSERT INTO sections VALUES (1, 'Computers', 'FALL', 0000, 20, 'no', 'comment'),
 			(57, 'Geology', 'SPRING', 0001, 21, 'no', 'comment'),
 			(58, 'Geology', 'SUMMER', 0001, 20, 'no', 'comment');
 
+-- Create Topics
+INSERT INTO topic VALUES (1, 'Computers', 1, '0000', 5),
+			(2, 'Writing', 1, '0001', 10),
+			(3, 'Reading', 2, '0001', 5),
+			(4, 'Math1', 1, '0010', 5),
+			(5, 'Math2', 2, '0010', 5),
+			(6, 'Math3', 3, '0010', 5),
+			(7, 'Science1', 1, '0011', 5),
+			(8, 'Science21', 2, '0011', 5),
+			(9, 'Science22', 2, '0011', 10),
+			(10, 'Science31', 3, '0011', 5),
+			(11, 'Science32', 3, '0011', 10);
+
 -- Create Topic_Currics
-DELETE FROM topic_curric;
 INSERT INTO topic_curric VALUES (1, 'Computer Science'),
 				(1, 'Math'),
 				(1, 'Science'),
@@ -163,17 +193,78 @@ INSERT INTO topic_curric VALUES (1, 'Computer Science'),
 				(10, 'Computer Science'),
 				(11, 'Science');
 
--- Create Topics
-DELETE FROM topic;
-INSERT INTO topic VALUES (1, 'Computers', 1, '0000', 5),
-			(2, 'Writing', 1, '0001', 10),
-			(3, 'Reading', 2, '0001', 5),
-			(4, 'Math1', 1, '0010', 5),
-			(5, 'Math2', 2, '0010', 5),
-			(6, 'Math3', 3, '0010', 5),
-			(7, 'Science1', 1, '0011', 5),
-			(8, 'Science21', 2, '0011', 5),
-			(9, 'Science22', 2, '0011', 10),
-			(10, 'Science31', 3, '0011', 5),
-			(11, 'Science32', 3, '0011', 10);
+-- Create Goal Grades
+INSERT INTO goal_grades VALUES (1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(2, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(3, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(4, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(5, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(6, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(7, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(8, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
+
+
+
+-- Create Section Grades
+INSERT INTO sec_grades VALUES (1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(2, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(3, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(4, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(5, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(6, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(7, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(8, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(11, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(12, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(13, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(14, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(15, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(16, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(17, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(18, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(19, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(20, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(21, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(22, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(24, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(25, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(26, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(27, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(28, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(29, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(31, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(32, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(33, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(34, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(35, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(36, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(37, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(38, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(39, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(40, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(41, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(42, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(43, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(44, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(45, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(46, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(47, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(48, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(49, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(50, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(51, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(52, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(53, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(54, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(55, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(56, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(57, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+			(58, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
+
 
