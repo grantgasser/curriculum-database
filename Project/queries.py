@@ -1,5 +1,5 @@
 ## Get data (Queries)
-
+#---------------------------QUERY POINT #1---------------------------------------------------
 #get curriculum
 #arguments: key of the table (curric_name, person_id) and the sql cursor
 def get_curric(curric_name, person_id, mycursor):
@@ -43,7 +43,7 @@ def get_ops_given_curric(curric_name, mycursor):
 
     mycursor.execute(sql, vals)
     return mycursor.fetchall()
-
+#---------------------------QUERY POINT #2---------------------------------------------------
 #gets course tuple given course_name
 def get_course(course_name, mycursor):
 	sql = """SELECT  *
@@ -76,7 +76,7 @@ def get_ops_given_course(course_name,mycursor):
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
 
-#------------------------------------------------------------------------------
+#---------------------------QUERY POINT #3---------------------------------------------------
 
 def get_section(curric_name,course_name,year1,year2, mycursor):
 
@@ -95,7 +95,7 @@ def get_section(curric_name,course_name,year1,year2, mycursor):
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
 
-#------------------------------------------------------------------------------
+#-----------------------------QUERY POINT #4-------------------------------------------------
 
 '''
 	def get_curric_distr(semester1,semester2,year,mycursor):
@@ -105,11 +105,11 @@ def get_section(curric_name,course_name,year1,year2, mycursor):
 	mycursor.fetchall()
 '''
 
-#------------------------------------------------------------------------------
+#-------------------QUERY POINT #5-----------------------------------------------------------
 def get_curric_dash(curric_name,mycursor):
 
 	sql = """SELECT curric_name,person_name
-		  	 FROM curriculum NATURAL JOIN curric_ops, NATURAL JOIN curric_reqs
+		  	 FROM curriculum NATURAL JOIN curric_ops NATURAL JOIN curric_reqs
 		  	 WHERE  curric_name = %s"""
 
 	vals = (curric_name,)
@@ -139,10 +139,17 @@ def count_op_courses_given_curric(curric_name,mycursor):
 	return mycursor.fetchall()
 
 
-def count_total_credits_given_curric(curric_name):
+def count_total_credits_given_curric(curric_name,mycursor):
 	sql = """SELECT SUM(cred_hrs)
-	         FROM course
-	         WHERE course_name %s """
+	         FROM courses
+	         WHERE course_name IN (SELECT DISTINCT course_name
+	         						FROM curric_ops NATURAL JOIN curric_reqs
+	         						WHERE req_for = %s OR op_for = %s) """
+
+	vals = (curric_name,)
+
+	mycursor.execute(sql,vals)
+	return mycursor.fetchall()
 
 def count_levels_given_curric(curric_name,mycursor):
 	sql = """SELECT COUNT(lvl)
@@ -153,3 +160,23 @@ def count_levels_given_curric(curric_name,mycursor):
 
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
+
+def min_hours_given_curric(curric_name,mycursor):
+	sql = """SELECT min_hours,min_cover2,min_cover3
+		   FROM curriculum
+		   WHERE curric_name = %s """
+	vals = (curric_name,)
+
+	mycursor.execute(sql,vals)
+	mycursor.fetchall()
+
+def is_given_curric_goal_valid(curric_name,mycursor):
+
+	sql = """ """
+
+
+	vals = (curric_name,)
+
+	mycursor.execute(sql,vals)
+	mycursor.fetchall()
+
