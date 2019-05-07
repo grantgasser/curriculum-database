@@ -44,6 +44,7 @@ def get_ops_given_curric(curric_name, mycursor):
     mycursor.execute(sql, vals)
     return mycursor.fetchall()
 
+#gets course tuple given course_name
 def get_course(course_name, mycursor):
 	sql = """SELECT  *
 			 FROM courses
@@ -51,16 +52,16 @@ def get_course(course_name, mycursor):
 
 	vals = (course_name,)
 
-	req = get_reqs(course_name,mycursor)
+	#req = get_reqs(course_name,mycursor)
 
-	ops = get_ops(course_name,mycursor)
+	#ops = get_ops(course_name,mycursor)
 
 	mycursor.execute(sql,vals)
-	return mycursor.fetchall(req,ops)
+	return mycursor.fetchall()
 
 
 def get_reqs_given_course(course_name,mycursor):
-	sql = """SELECT req_by
+	sql = """SELECT req_for
 	         FROM curric_reqs
 	         WHERE course_name = %s """
 
@@ -79,19 +80,18 @@ def get_ops_given_course(course_name,mycursor):
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
 
-def get_section(curric_name,course_name,semester1,semester2,year, mycursor):
+def get_section(curric_name,course_name,year1, year2, mycursor):
 
 	sql = """SELECT *
 			 FROM   sec_grades NATURAL JOIN section
 			 WHERE  course_name = %s
-			 AND semester BETWEEN %s AND %s
-			 AND year = %s
+			 AND year BETWEEN %s AND %s
 			 AND course_name IN (SELECT course_name
 			 					 FROM curric_reqs NATURAL JOIN curric_ops
-			 					 WHERE op_for = %s OR req_by = %s)
-		 """
+			 					 WHERE op_for = %s OR req_for = %s)
+		   """
 
-	vals = (curric_name,course_name,semester1,semester2,year)
+	vals = (course_name,year1, year2, curric_name, curric_name)
 
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall();
