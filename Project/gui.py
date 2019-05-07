@@ -4,6 +4,7 @@ import tkinter as tk
 import tkinter.messagebox
 import insert_data as ins
 import queries as q
+from PIL import Image, ImageTk
 
 HEIGHT = 800
 WIDTH = 800
@@ -50,13 +51,20 @@ class MyGUI:
 
         self.main_window = tk.Tk()
 
-        #self.background_image = tk.PhotoImage(file='background.jpg')
-        #self.background_label = tk.Label(root, image=background_image)
-        #self.background_label.place(relwidth=1, relheight=1)
+        self.canvas = tk.Canvas(self.main_window,  width=780, height=1170)
+        self.canvas.pack()
+
+        self.img = ImageTk.PhotoImage(Image.open('background2.jpg'))
+        self.canvas.background = self.img
+        self.bg = self.canvas.create_image(0,0,anchor=tk.NW, image=self.img)
+
+        # self.background_image = tk.PhotoImage(file='background2.jpg')
+        # self.background_label = tk.Label(self.main_window, image=self.background_image)
+        # self.background_label.place(relwidth=1, relheight=1)
 
         self.main_window.title('Curriculum Database Application')
 
-        self.main_window.geometry('1100x750')
+        self.main_window.geometry('1170x780')
 
         ##################
         # SHOW TABLES
@@ -485,8 +493,5 @@ class MyGUI:
             self.curric_topic['text'] = 'Topics: ' + str(topics) + '\n Opt Course(s): ' + str(ops) + '\n Req Course(s): ' + str(reqs)
 
 
-
-
-
 #--------------------------------------------------------------------------
-    #FUNCTIONS FOR UPDATE DATA
+    #FUNCTIONS FOR UPDATE DATA - HEY JACKSON!!!!!!!!!!
