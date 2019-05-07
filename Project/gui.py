@@ -4,6 +4,7 @@ import tkinter as tk
 import tkinter.messagebox
 import insert_data as ins
 import queries as q
+import upadte_data as up
 
 HEIGHT = 800
 WIDTH = 800
@@ -47,6 +48,7 @@ class MyGUI:
 
         #for querying data
         self.curric_key_input = [] #user will enter keys, stored here
+        self.update_attr_input = []
 
         self.main_window = tk.Tk()
 
@@ -163,7 +165,9 @@ class MyGUI:
 
         ##################
         # QUERY CURRICULUM-COURSE (GET SECTION AND GRADE DIST)
-        self.get_section_grade_dist = ['curric_name', 'course_name', 'year1', 'year2']
+        self.course_curric_attr = ['curric_name', 'course_name', 'year1', 'year2']
+        self.course_curric_attr_num = 0
+        self.course_curric_vals = {}
 
         self.mid_course_curric_label = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
         self.mid_course_curric_label.place(relx=.7, rely=0, relwidth=.2, relheight=0.12, anchor='n')
@@ -189,6 +193,31 @@ class MyGUI:
 
         self.bottom_frame = tk.Frame(self.main_window, bg='#a3a3c2', bd=2)
         self.bottom_frame.place(relx=.5, rely=.78, relwidth=.75, relheight=0.2, anchor='n')
+
+        #Create Menu in top frame for input new data, horrible syntax
+        self.update_menu_button = tk.Menubutton(self.bottom_frame, text='Tables')
+        self.update_menu_button.menu = tk.Menu(self.update_menu_button, tearoff=0)
+        self.update_menu_button['menu'] = self.update_menu_button.menu
+
+
+        #Dropdown Menu options
+        self.update_menu_button.menu.add_command(label='curriculum', command=lambda:self.display_text_update('curriculum'))
+        self.update_menu_button.menu.add_command(label='courses', command=lambda:self.display_text_update('courses'))
+        self.update_menu_button.menu.add_command(label='topic', command=lambda:self.display_text_update('topic'))
+        self.update_menu_button.menu.add_command(label='curric_reqs', command=lambda:self.display_text_update('curric_reqs'))
+        self.update_menu_button.menu.add_command(label='curric_ops', command=lambda:self.display_text_update('curric_ops'))
+        self.update_menu_button.menu.add_command(label='topic_curric', command=lambda:self.display_text_update('topic_curric'))
+        self.update_menu_button.menu.add_command(label='goals', command=lambda:self.display_text_update('goals'))
+        self.update_menu_button.menu.add_command(label='section', command=lambda:self.display_text_update('section'))
+        self.update_menu_button.menu.add_command(label='course_goals', command=lambda:self.display_text_update('course_goals'))
+        self.update_menu_button.menu.add_command(label='sec_grades', command=lambda:self.display_text_update('sec_grades'))
+        self.update_menu_button.menu.add_command(label='goal_grades', command=lambda:self.display_text_update('goal_grades'))
+
+        #Place menu
+        self.update_menu_button.place(relwidth=0.15, relheight=.2)
+
+
+        self.update_attr = 0
         #################
 
         #run
@@ -342,26 +371,54 @@ class MyGUI:
             self.new_course_goals_data[table_dict[self.attr]] = input
 
 
-        #destroy
-        #self.insert_label.destroy()
-        #self.insert_label_attr.destroy()
-        #self.entry.destroy()
-        #self.button.destroy()
-
-
 
 
 #--------------------------------------------------------------------------
     #FUNCTIONS FOR QUERIES
     def course_curric_query(self, input):
-        print(input)
+        if self.course_curric_attr_num < 4:
+            self.course_curric_vals[self.course_curric_attr[self.course_curric_attr_num]] = input
+
+            self.course_curric_attr_num += 1
+
+            #finished getting values, execute query and display
+            if self.course_curric_attr_num == 4:
+                print(self.course_curric_vals)
+                self.course_curric_attr_num = 0
+
+
+                #reset button
+                self.mid_course_label_button.destroy()
+                self.mid_course_label_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda:[self.course_curric_query(self.mid_course_curric_label_entry.get()), self.next_input()])
+                self.mid_course_label_button.place(relx=.81, rely=.30, relwidth = .06, relheight=.15)
+
+                #run query
+                print('/nGetting section(s) grade distribution(s)...')
+                section_grade_dist = q.get_section(self.course_curric_vals[self.course_curric_attr[0]], self.course_curric_vals[self.course_curric_attr[1]],
+                                                    self.course_curric_vals[self.course_curric_attr[2]], self.course_curric_vals[self.course_curric_attr[3]],
+                                                    self.cursor)
+
+                for tuple in section_grade_dist:
+                    print(tuple)
 
 
     def next_input(self):
-        print('next attribute')
+        #print('next attribute')
+
+        #Ask for new attr value
+        self.mid_course_curric_label_attr.destroy()
 
 
-        #reset if finished
+        self.mid_course_curric_label_attr = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
+        self.mid_course_curric_label_attr.place(relx=.7, rely=.15, relwidth=.2, relheight=0.12, anchor='n')
+        self.mid_course_curric_label_attr['text'] = 'Enter ' + self.course_curric_attr[self.course_curric_attr_num]
+
+        #Reset entry
+        self.mid_course_curric_label_entry.destroy()
+        self.mid_course_curric_label_entry  = tk.Entry(self.mid_frame, font=25)
+        self.mid_course_curric_label_entry .place(relx=.6, rely=.30, relwidth=.2, relheight=.15)
+
+
 
 
     #runs the course query, displays data
@@ -490,3 +547,58 @@ class MyGUI:
 
 #--------------------------------------------------------------------------
     #FUNCTIONS FOR UPDATE DATA
+
+    #displays text in top frame for inputting data
+    def display_text_update(self, table_name):
+        self.update_attr = 0
+
+        #display direction and label
+        self.update_label = tk.Label(self.bottom_frame, font=('Times', '12'))
+        self.update_label.place(relx =.2, rely=0, relwidth=0.55, relheight=.15)
+        self.update_label['text'] = 'Please enter the attribute of ' + table_name + ' that you want to change.'
+
+        self.update_label_attr = tk.Label(self.bottom_frame, font=('Times', '12'))
+        self.update_label_attr.place(relx =.2, rely=.2, relwidth=0.12, relheight=.2)
+
+
+        self.update_label_attr['text'] = 'Attribute:'
+
+        #Display entry field and button
+        self.update_entry = tk.Entry(self.bottom_frame, font=25)
+        self.update_entry.place(relx =.33, rely=.2, relwidth=0.2, relheight=.2)
+
+        self.button = tk.Button(self.bottom_frame, text="Enter", font=40, command=lambda: [self.update(self.update_entry.get(), table_name), self.next_update_attr()])
+        self.button.place(relx=0.55, rely=.2, relwidth=0.12, relheight=0.2)
+
+
+    def next_update_attr(self):
+        print(self.update_attr_input)
+        #self.update_attr_input = []
+        attr = ''
+
+        self.update_label_attr.destroy()
+        self.update_entry.destroy()
+
+        if len(self.update_attr_input) == 1:
+            attr = 'New Value:'
+        else:
+            self.update_attr_input = []
+            attr = 'Attribute:'
+
+        self.update_label_attr = tk.Label(self.bottom_frame, font=('Times', '12'))
+        self.update_label_attr.place(relx =.2, rely=.2, relwidth=0.12, relheight=.2)
+        self.update_label_attr['text'] = attr
+
+        self.update_entry = tk.Entry(self.bottom_frame, font=25)
+        self.update_entry.place(relx =.33, rely=.2, relwidth=0.2, relheight=.2)
+
+
+    def update(self, input, table_name):
+        print(input)
+        self.update_attr_input.append(input)
+
+        if len(self.update_attr_input) == 2:
+            print('running update on', table_name)
+
+            #if table_name == 'curriculum':
+                #up.updateCurriculum(update_attr_input[0], update_attr_input[1])

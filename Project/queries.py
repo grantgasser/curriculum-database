@@ -80,17 +80,17 @@ def get_ops_given_course(course_name,mycursor):
 
 def get_section(curric_name,course_name,year1,year2, mycursor):
 
-	sql = """SELECT * 
-			 FROM   sec_grades  
+	sql = """SELECT *
+			 FROM   sec_grades
 			 WHERE  section_id IN (SELECT DISTINCT section_id
-								   FROM curric_reqs NATURAL JOIN curric_ops NATURAL JOIN section 
-								   WHERE course_name = %s 
-								   AND (op_for = %s OR req_for = %s) 
+								   FROM curric_reqs NATURAL JOIN curric_ops NATURAL JOIN section
+								   WHERE course_name = %s
+								   AND (op_for = %s OR req_for = %s)
 								   AND year BETWEEN %s AND %s)
 			GROUP BY section_id
 		 """
 
-	vals = (curric_name,course_name,year1,year2)
+	vals = (course_name,curric_name, curric_name, year1,year2)
 
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
@@ -100,7 +100,6 @@ def get_section(curric_name,course_name,year1,year2, mycursor):
 '''
 	def get_curric_distr(curric_name,semester1,semester2,year,mycursor):
 #query incomplete
-
 	vals = (curric_name,semester1,semester2,year)
 	mycursor.execute(sql,vals)
 	mycursor.fetchall()
@@ -118,16 +117,14 @@ def get_curric_dash(curric_name,mycursor):
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
 
-def count_req_courses_given_curric(curric_name,mycursor):
-
-	sql = """SELECT COUNT(DISTINCT course_name)
+def count_req_courses_given_curric(curric_name, mycusor):
+    sql = """SELECT COUNT(DISTINCT course_name)
 	         FROM curric_reqs
 	         WHERE req_for = %s """
+    vals = (curric_name,)
 
-	vals = (curric_name,)
-
-	mycursor.execute(sql,vals)
-        return mycursor.fetchall()
+    mycursor.execute(sql, vals)
+    return mycursor.fetchall()
 
 def count_op_courses_given_curric(curric_name,mycursor):
 	sql = """SELECT COUNT(DISTINCT course_name)
@@ -172,11 +169,7 @@ def min_hours_given_curric(curric_name,mycursor):
 	return mycursor.fetchall()
 '''
 def is_given_curric_goal_valid(curric_name,mycursor):
-
-
-
 	vals = (curric_name,)
-
 	mycursor.execute(sql,vals)
 	mycursor.fetchall()
 '''

@@ -4,7 +4,7 @@ def create_tables(mycursor):
 
     #mycursor.execute('show tables')
 
-    mycursor.execute("DROP TABLE IF EXISTS curriculum")
+    #mycursor.execute("DROP TABLE IF EXISTS curriculum")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `curriculum`(
             `curric_name` VARCHAR(25) NOT NULL,
             `person_name` VARCHAR(25) NOT NULL,
@@ -16,7 +16,7 @@ def create_tables(mycursor):
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
 
-    mycursor.execute("DROP TABLE IF EXISTS `courses`")
+    #mycursor.execute("DROP TABLE IF EXISTS `courses`")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `courses`(
             `course_name` VARCHAR(25) NOT NULL,
             `subj_code` VARCHAR(5) NOT NULL,
@@ -27,7 +27,7 @@ def create_tables(mycursor):
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
 
-    mycursor.execute("DROP TABLE IF EXISTS `curric_reqs`")
+    #mycursor.execute("DROP TABLE IF EXISTS `curric_reqs`")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `curric_reqs`(
             `course_name` VARCHAR(25) NOT NULL,
             `req_for` VARCHAR(25) NOT NULL,
@@ -36,7 +36,7 @@ def create_tables(mycursor):
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
 
-    mycursor.execute("DROP TABLE IF EXISTS `curric_ops`")
+    #mycursor.execute("DROP TABLE IF EXISTS `curric_ops`")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `curric_ops`(
             `course_name` VARCHAR(25) NOT NULL,
             `op_for` VARCHAR(25) NOT NULL,
@@ -45,7 +45,7 @@ def create_tables(mycursor):
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
 
-    mycursor.execute("DROP TABLE IF EXISTS `topic`")
+    #mycursor.execute("DROP TABLE IF EXISTS `topic`")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `topic`(
             `topic_id` int NOT NULL,
             `topic_name` VARCHAR(25) NOT NULL,
@@ -56,7 +56,7 @@ def create_tables(mycursor):
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
 
-    mycursor.execute("DROP TABLE IF EXISTS `topic_curric`")
+    #mycursor.execute("DROP TABLE IF EXISTS `topic_curric`")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `topic_curric`(
             `topic_id` int NOT NULL,
             `curric_assoc` VARCHAR(25) NOT NULL,
@@ -66,7 +66,7 @@ def create_tables(mycursor):
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
 
-    mycursor.execute("DROP TABLE IF EXISTS `goals`")
+    #mycursor.execute("DROP TABLE IF EXISTS `goals`")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `goals`(
             `goal_id` int NOT NULL,
             `description` VARCHAR(255) NOT NULL,
@@ -77,7 +77,7 @@ def create_tables(mycursor):
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
 
-    mycursor.execute("DROP TABLE IF EXISTS `section`")
+    #mycursor.execute("DROP TABLE IF EXISTS `section`")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `section`(
             `section_id` int NOT NULL,
             `course_name` VARCHAR(25) NOT NULL,
@@ -91,7 +91,7 @@ def create_tables(mycursor):
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
 
-    mycursor.execute("DROP TABLE IF EXISTS `sec_grades`")
+    #mycursor.execute("DROP TABLE IF EXISTS `sec_grades`")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `sec_grades`(
             `section_id` int NOT NULL,
             `A+` int NOT NULL,
@@ -115,7 +115,7 @@ def create_tables(mycursor):
             """)
 
 
-    mycursor.execute("DROP TABLE IF EXISTS `goal_grades`")
+    #mycursor.execute("DROP TABLE IF EXISTS `goal_grades`")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `goal_grades`(
             `goal_id` int NOT NULL,
             `A+` int NOT NULL,
@@ -138,7 +138,7 @@ def create_tables(mycursor):
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
 
-    mycursor.execute("DROP TABLE IF EXISTS `course_goals`")
+    #mycursor.execute("DROP TABLE IF EXISTS `course_goals`")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `course_goals`(
             `course_name` VARCHAR(25) NOT NULL,
             `goal_id` int NOT NULL,
