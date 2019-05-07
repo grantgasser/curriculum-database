@@ -98,9 +98,10 @@ def get_section(curric_name,course_name,year1,year2, mycursor):
 #-----------------------------QUERY POINT #4-------------------------------------------------
 
 '''
-	def get_curric_distr(semester1,semester2,year,mycursor):
+	def get_curric_distr(curric_name,semester1,semester2,year,mycursor):
 #query incomplete
-	vals = (semester1,semester2,year)
+
+	vals = (curric_name,semester1,semester2,year)
 	mycursor.execute(sql,vals)
 	mycursor.fetchall()
 '''
@@ -169,14 +170,13 @@ def min_hours_given_curric(curric_name,mycursor):
 
 	mycursor.execute(sql,vals)
 	mycursor.fetchall()
-
+'''
 def is_given_curric_goal_valid(curric_name,mycursor):
 
-	sql = """ """
 
 
 	vals = (curric_name,)
 
 	mycursor.execute(sql,vals)
 	mycursor.fetchall()
-
+'''
