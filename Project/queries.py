@@ -81,16 +81,16 @@ def get_ops_given_course(course_name,mycursor):
 def get_section(curric_name,course_name,year1,year2, mycursor):
 
 	sql = """SELECT *
-			 FROM   sec_grades
-			 WHERE  section_id IN (SELECT DISTINCT section_id
-								   FROM curric_reqs NATURAL JOIN curric_ops NATURAL JOIN section
-								   WHERE course_name = %s
-								   AND (op_for = %s OR req_for = %s)
-								   AND year BETWEEN %s AND %s)
-			GROUP BY section_id
+FROM sec_grades 
+WHERE sec_grades.section_id IN (SELECT section.section_id
+					 FROM section JOIN curric_reqs JOIN curric_ops
+                     WHERE req_for = %s OR op_for = %s
+					AND year BETWEEN %s AND %s
+					AND section.course_name = %s)
+GROUP BY section_id;
 		 """
 
-	vals = (course_name,curric_name, curric_name, year1,year2)
+	vals = (curric_name,curric_name,year1,year2,course_name)
 
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
@@ -100,6 +100,14 @@ def get_section(curric_name,course_name,year1,year2, mycursor):
 '''
 	def get_curric_distr(curric_name,semester1,semester2,year,mycursor):
 #query incomplete
+
+SELECT SUM(A+)
+FROM   sec_grades NATURAL JOIN section
+WHERE  section_id IN (SELECT section_id
+					FROM curric_reqs NATURAL JOIN curric_ops NATURAL JOIN section
+					WHERE (op_for = 'Comp Sci' OR req_for = 'Comp Sci') 
+					AND year BETWEEN 2018 AND 2019)
+			
 	vals = (curric_name,semester1,semester2,year)
 	mycursor.execute(sql,vals)
 	mycursor.fetchall()
@@ -115,16 +123,18 @@ def get_curric_dash(curric_name,mycursor):
 	vals = (curric_name,)
 
 	mycursor.execute(sql,vals)
-	return mycursor.fetchall()
+	return mycursor.fetchall(cntReq,cntOpt)
 
-def count_req_courses_given_curric(curric_name, mycusor):
-    sql = """SELECT COUNT(DISTINCT course_name)
+def count_req_courses_given_curric(curric_name,mycursor):
+
+	sql = """SELECT COUNT(DISTINCT course_name)
 	         FROM curric_reqs
 	         WHERE req_for = %s """
-    vals = (curric_name,)
 
-    mycursor.execute(sql, vals)
-    return mycursor.fetchall()
+	vals = (curric_name,)
+
+	mycursor.execute(sql,vals)
+	return mycursor.fetchall()
 
 def count_op_courses_given_curric(curric_name,mycursor):
 	sql = """SELECT COUNT(DISTINCT course_name)
@@ -167,9 +177,26 @@ def min_hours_given_curric(curric_name,mycursor):
 
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
-'''
+
 def is_given_curric_goal_valid(curric_name,mycursor):
-	vals = (curric_name,)
-	mycursor.execute(sql,vals)
-	mycursor.fetchall()
+
+	sql = """SELECT SUM(cred_hrs)
+			 FROM courses NATURAL JOIN course_goals
+			 WHERE goal_id IN (SELECT goal_id
+				  			   FROM goals 
+                  			   WHERE curric_name = %s)"""
 '''
+ #    goalHrsSQL = """SELECT goal_hrs
+					# FROM goals 
+					# WHERE curric_name = %s)"""
+
+	vals = (curric_name,)
+
+	mycursor.execute(sql,goalHrs,SQL,vals)
+
+	bool valid
+
+	if sql >= goalHrsSQL:
+		valid = 
+'''
+
