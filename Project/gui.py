@@ -46,7 +46,7 @@ class MyGUI:
         self.new_goal_grades_data = {}
 
         #for querying data
-        self.curric_query = [] #user will enter keys, stored here
+        self.curric_key_input = [] #user will enter keys, stored here
 
         self.main_window = tk.Tk()
 
@@ -100,29 +100,29 @@ class MyGUI:
         self.mid_label['text'] = 'Query Existing Data'
 
         self.mid_frame = tk.Frame(self.main_window, bg='#a3a3c2', bd=2)
-        self.mid_frame.place(relx=.5, rely=.45, relwidth=.75, relheight=0.2, anchor='n')
+        self.mid_frame.place(relx=.5, rely=.45, relwidth=.75, relheight=0.27, anchor='n')
 
         self.mid_curric_label = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
-        self.mid_curric_label.place(relx=.10, rely=0, relwidth=.2, relheight=0.15, anchor='n')
+        self.mid_curric_label.place(relx=.10, rely=0, relwidth=.2, relheight=0.12, anchor='n')
         self.mid_curric_label['text'] = 'Query Curriculum Data'
 
         self.mid_curric_label_attr = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
-        self.mid_curric_label_attr.place(relx=.10, rely=.2, relwidth=.2, relheight=0.15, anchor='n')
+        self.mid_curric_label_attr.place(relx=.10, rely=.15, relwidth=.2, relheight=0.12, anchor='n')
         self.mid_curric_label_attr['text'] = 'Enter curric_name'
 
         self.mid_curric_entry = tk.Entry(self.mid_frame, font=25)
-        self.mid_curric_entry.place(relx=0, rely=.4, relwidth=.2, relheight=.2)
+        self.mid_curric_entry.place(relx=0, rely=.30, relwidth=.2, relheight=.15)
 
-        self.mid_curric_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda: self.curric_query(self.mid_curric_entry.get()))
-        self.mid_curric_button.place(relx=.21, rely=.4, relwidth = .06, relheight=.2)
+        self.mid_curric_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda:[self.curric_query(self.mid_curric_entry.get()), self.next_curric_attr()])
+        self.mid_curric_button.place(relx=.21, rely=.30, relwidth = .06, relheight=.15)
 
 
         self.bottom_label = tk.Label(self.main_window, anchor='nw', font=('Times', '12'))
-        self.bottom_label.place(relx=0.5, rely=0.67, relwidth=0.75, relheight=0.05, anchor='n')
+        self.bottom_label.place(relx=0.5, rely=0.75, relwidth=0.75, relheight=0.05, anchor='n')
         self.bottom_label['text'] = 'Update Existing Data'
 
         self.bottom_frame = tk.Frame(self.main_window, bg='#a3a3c2', bd=2)
-        self.bottom_frame.place(relx=.5, rely=.7, relwidth=.75, relheight=0.2, anchor='n')
+        self.bottom_frame.place(relx=.5, rely=.78, relwidth=.75, relheight=0.2, anchor='n')
 
         #run
         self.main_window.mainloop()
@@ -130,12 +130,82 @@ class MyGUI:
 
 
     def next_curric_attr(self):
-        print(len(curric_query))
+        #print(len(self.curric_key_input))
+        print(self.curric_key_input)
+
+        attr = ''
+
+        #reset input button, change label
+        self.mid_curric_label_attr.destroy()
+        self.mid_curric_entry.destroy()
+        self.mid_curric_button.destroy()
+
+        #already entered curric_name, now need person_id
+        if len(self.curric_key_input) == 1:
+            attr = 'person_id'
+        else:
+            #reset and start over for new input
+            self.curric_key_input = []
+            attr = 'curric_name'
+
+
+        self.mid_curric_label_attr = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
+        self.mid_curric_label_attr.place(relx=.10, rely=.15, relwidth=.2, relheight=0.12, anchor='n')
+        self.mid_curric_label_attr['text'] = 'Enter ' + attr
+
+        self.mid_curric_entry = tk.Entry(self.mid_frame, font=25)
+        self.mid_curric_entry.place(relx=0, rely=.30, relwidth=.2, relheight=.15)
+
+        self.mid_curric_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda:[self.curric_query(self.mid_curric_entry.get()), self.next_curric_attr()])
+        self.mid_curric_button.place(relx=.21, rely=.30, relwidth = .06, relheight=.15)
+
 
 
     def curric_query(self, input):
-        print(input)
-        curric_query.append(input)
+        #print(input)
+        self.curric_key_input.append(input)
+
+        if len(self.curric_key_input) == 2:
+            #data from curriculum table
+            curric_info = q.get_curric(self.curric_key_input[0], self.curric_key_input[1], self.cursor)
+
+            for tuple in curric_info:
+                print('\nResult: ', tuple, '\n')
+                tup_str = str(tuple)
+                #print(tup_str)
+                self.curric_tup_result = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
+                self.curric_tup_result.place(relx=0.005, rely=.48, relwidth = .3, relheight=.12)
+                self.curric_tup_result['text'] = tup_str
+
+            #data from topic_curric table (topics associated w/ this curric)
+            topic_curric = q.get_topic_curric(self.curric_key_input[0], self.cursor)
+
+            topics = []
+            for tuple in topic_curric:
+                print('Topic:', tuple)
+                topics.append(tuple[0])
+
+
+            #data from curric_reqs (required courses for given curric)
+            curric_reqs = q.get_reqs_given_curric(self.curric_key_input[0], self.cursor)
+
+            reqs = []
+            for tuple in curric_reqs:
+                print('Required Course(s):', tuple)
+                reqs.append(tuple[0])
+
+            #data from curric_ops (optional courses for given curric)
+            curric_ops = q.get_ops_given_curric(self.curric_key_input[0], self.cursor)
+
+            ops = []
+            for tuple in curric_ops:
+                print('Optional Course(s):', tuple)
+                ops.append(tuple[0])
+
+            #show results on GUI
+            self.curric_topic = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
+            self.curric_topic.place(relx=0.005, rely=.63, relwidth = .3, relheight=.33)
+            self.curric_topic['text'] = 'Topics: ' + str(topics) + '\n Opt Course(s): ' + str(ops) + '\n Req Course(s): ' + str(reqs)
 
 
     def show_tables(self):

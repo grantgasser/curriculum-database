@@ -1,97 +1,84 @@
-
 ## Get data (Queries)
 
 #get curriculum
 #arguments: key of the table (curric_name, person_id) and the sql cursor
 def get_curric(curric_name, person_id, mycursor):
-    sql = """SELECT * 
-    		 FROM curriculum 
+    sql = """SELECT *
+    		 FROM curriculum
     		 WHERE curric_name = %s
              AND person_id = %s"""
-
-    reqs = get_req_courses_for_curric(curric_name,mycursor)
-
-    ops = get_op_courses_for_curric(curric_name,mycursor)
-
-    topics = get_topics_for_curric(curric_name,mycursor)
-
     vals = (curric_name, person_id)
 
     mycursor.execute(sql,vals)
-    return mycursor.fetchall(reqs,ops,topics)
+    return mycursor.fetchall()
 
-#def_curric_no_name()---> hold on implementation
+#get topic given curriculum name (first bullet point on queries)
+def get_topic_curric(curric_assoc, mycursor):
+    sql = """SELECT topic_name
+            FROM topic, topic_curric
+            WHERE topic.topic_id = topic_curric.topic_id
+            AND curric_assoc = %s"""
 
-def get_req_courses_for_curric(curric_name,mycursor):
-	sql = """SELECT DISTINCT course_name
-	         FROM curric_reqs
-	         WHERE req_for = %s """
+    vals = (curric_assoc,)
 
-	vals = (curric_name)
+    mycursor.execute(sql, vals)
+    return mycursor.fetchall()
 
-	mycursor.execute(sql,vals)
-	return mycursor.fetchall()
+#gets required courses given a curric_name
+def get_reqs_given_curric(curric_name, mycursor):
+    sql = """SELECT course_name
+            FROM curric_reqs
+            WHERE req_for = %s"""
+    vals = (curric_name,)
 
-def get_op_courses_for_curric(curric_name,mycursor):
-	sql = """SELECT DISTINCT course_name
-	         FROM curric_ops
-	         WHERE op_for = %s """
+    mycursor.execute(sql, vals)
+    return mycursor.fetchall()
 
-	vals = (curric_name)
+#gets optional courses given a curric_name
+def get_ops_given_curric(curric_name, mycursor):
+    sql = """SELECT course_name
+            FROM curric_ops
+            WHERE op_for = %s"""
+    vals = (curric_name,)
 
-	mycursor.execute(sql,vals)
-	return mycursor.fetchall()
+    mycursor.execute(sql, vals)
+    return mycursor.fetchall()
 
-def get_topics_for_curric(curric_name,mycursor):
-	sql = """SELECT topic_name
-			 FROM topic
-			 WHERE topic_id EXISTS (SELECT topic_id
-			 						FROM topic_curric
-			 						WHERE curric_assoc = &s)"""
-
-	vals = (curric_name)
-
-	mycursor.execute(sql,vals)
-	mycursor.fetchall()
-
-#get course information
 def get_course(course_name, mycursor):
-	sql = """SELECT  * 
+	sql = """SELECT  *
 			 FROM courses
 			 WHERE course_name = %s"""
 
+	vals = (course_name,)
 
-	req = get_curric_req_for_course(course_name,mycursor)
+	req = get_reqs(course_name,mycursor)
 
-	ops = get_curric_op_for_course(course_name,mycursor)
-
-	vals = (course_name)
+	ops = get_ops(course_name,mycursor)
 
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall(req,ops)
 
 
-def get_curric_req_for_course(course_name,mycursor):
-	sql = """SELECT req_for
+def get_reqs_given_course(course_name,mycursor):
+	sql = """SELECT req_by
 	         FROM curric_reqs
 	         WHERE course_name = %s """
 
-	vals = (course_name)
+	vals = (course_name,)
 
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
 
-def get_curric_op_for_course(course_name,mycursor):
+def get_ops_given_course(course_name,mycursor):
 	sql = """SELECT op_for
 	         FROM curric_ops
 	         WHERE course_name = %s """
 
-	vals = (course_name)
+	vals = (course_name,)
 
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
 
-#get section and grade distribution
 def get_section(curric_name,course_name,semester1,semester2,year, mycursor):
 
 	sql = """SELECT *
@@ -99,16 +86,16 @@ def get_section(curric_name,course_name,semester1,semester2,year, mycursor):
 			 WHERE  course_name = %s
 			 AND semester BETWEEN %s AND %s
 			 AND year = %s
-			 AND course_name IN (SELECT course_name 
+			 AND course_name IN (SELECT course_name
 			 					 FROM curric_reqs NATURAL JOIN curric_ops
-			 					 WHERE op_for = %s OR req_for = %s)
+			 					 WHERE op_for = %s OR req_by = %s)
 		 """
 
 	vals = (curric_name,course_name,semester1,semester2,year)
 
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall();
-			 
+
 
 def get_curric_dash(curric_name,mycursor):
 #query incomplete
@@ -127,7 +114,6 @@ def get_curric_dash(curric_name,mycursor):
 
 	mycursor.execute(sql,vals)
 	mycursor.fetchall(cntReq,cntOpt)
-
 
 def count_req_courses_for_curric(curric_name,mycursor):
 	sql = """SELECT COUNT(DISTINCT course_name)
@@ -149,15 +135,13 @@ def count_op_courses_for_curric(curric_name,mycursor):
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
 
-	
+
 
 
 
 '''
 	def get_curric_distr(semester1,semester2,year,mycursor):
-#query incomplete  
-
-
+#query incomplete
 	vals = (semester1,semester2,year)
 	mycursor.execute(sql,vals)
 	mycursor.fetchall()
