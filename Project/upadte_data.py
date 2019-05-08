@@ -1,5 +1,5 @@
 ####################################################################################
-# Author: Jackson O'Donnell
+# Authors: Jackson O'Donnell, Grant Gasser
 #
 # Purpose: Functions to update data in the tables
 ####################################################################################
@@ -228,7 +228,7 @@ def updateSecGrades(update_data, mycursor, mydb):
     sql = """UPDATE sec_grades SET """+attr+""" = %s
              WHERE section_id = %s"""
 
-    vals = (update_data['New Value:'], update_data['section_id'])
+    vals = (update_data['New Value:'], update_data['section_id'], update_data['course_name'])
 
     mycursor.execute(sql, vals)
 
@@ -287,3 +287,30 @@ def updateCourseGoals(update_data, mycursor, mydb):
     mydb.commit()
 
     print('\nThe course-goal relationship has been edited.')
+
+
+##################################################################################
+# Function: updateCourseTopic
+#
+# Purpose: Updates the course_topic table
+#
+# Parameters:
+#        attr: The attribute to be edited
+#        data: The new value for the attribute
+#        topic: A dictionary for the primary key of the course_topic (topic_id, course_name)
+#        mycursor: A cursor to do the insertions
+#        mydb: The database in which the table lies
+##################################################################################
+def updateTopicCurric(update_data, mycursor, mydb):
+    attr = update_data['Attribute:'].replace("'", '')
+    sql = """UPDATE course_topic SET """+attr+""" = %s
+             WHERE topic_id = %s AND curric_assoc = %s"""
+
+    vals = (update_data['New Value:'], update_data['topic_id'], update_data['curric_assoc'])
+
+    mycursor.execute(sql, vals)
+
+    mydb.commit()
+
+    print('\nThe coursetopic relationship has been edited.')
+

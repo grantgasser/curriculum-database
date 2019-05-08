@@ -73,7 +73,7 @@ DROP TABLE IF EXISTS `topic_curric`;
 CREATE TABLE IF NOT EXISTS `topic_curric`(
    `topic_id` int NOT NULL CHECK (topic_id >= 0),
    `curric_assoc` VARCHAR(25) NOT NULL,
-   PRIMARY KEY(`topic_id`),
+   PRIMARY KEY(`topic_id`, `curric_assoc`),
    FOREIGN KEY (`curric_assoc`) REFERENCES `curriculum`(`curric_name`),
    FOREIGN KEY (`topic_id`) REFERENCES `topic`(`topic_id`))
    ENGINE=InnoDB, DEFAULT CHARSET=latin1;
@@ -106,6 +106,7 @@ CREATE TABLE IF NOT EXISTS `section`(
 -- Make or remake sec_grades relationship
 DROP TABLE IF EXISTS `sec_grades`;
 CREATE TABLE IF NOT EXISTS `sec_grades`(
+   `course_name` VARCHAR(25) NOT NULL,
    `section_id` int NOT NULL CHECK (section_id >= 0),
    `A+` int NOT NULL CHECK (`A+` >= 0),
    `A` int NOT NULL CHECK (A >= 0),
@@ -122,8 +123,9 @@ CREATE TABLE IF NOT EXISTS `sec_grades`(
    `F` int NOT NULL CHECK (F >= 0),
    `I` int NOT NULL CHECK (I >= 0),
    `W` int NOT NULL CHECK (W >= 0),
-   PRIMARY KEY(`section_id`),
-   FOREIGN KEY(`section_id`) REFERENCES `section`(`section_id`))
+   PRIMARY KEY(`section_id`, `course_name`),
+   FOREIGN KEY(`section_id`) REFERENCES `section`(`section_id`),
+   FOREIGN KEY(`course_name`) REFERENCES `courses`(`course_name`))
    ENGINE=InnoDB, DEFAULT CHARSET=latin1;
 
 -- Make or remake goal_grades relationship
@@ -159,3 +161,12 @@ CREATE TABLE IF NOT EXISTS `course_goals`(
    FOREIGN KEY (`goal_id`) REFERENCES `goals`(`goal_id`))
    ENGINE=InnoDB, DEFAULT CHARSET=latin1;
 
+-- Make or remake course_topic relationship
+DROP TABLE IF EXISTS `course_topic`;
+CREATE TABLE IF NOT EXISTS `course_topic`(
+   `course_name` VARCHAR(25) NOT NULL,
+   `topic_id` int NOT NULL,
+   PRIMARY KEY (`course_name`, `topic_id`),
+   FOREIGN KEY (`course_name`) REFERENCES `courses`(`course_name`),
+   FOREIGN KEY (`topic_id`) REFERENCES `topic`(`topic_id`))
+   ENGINE=InnoDB, DEFAULT CHARSET=latin1;

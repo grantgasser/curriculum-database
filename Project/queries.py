@@ -1,3 +1,9 @@
+#############################################################################################
+# Authors: Zee Dugar, Grant Gasser, Jackson O'Donnell
+#
+# Purpose: Host the functions to obtain data from the database for the user
+#############################################################################################
+
 ## Get data (Queries)
 #---------------------------QUERY POINT #1---------------------------------------------------
 #get curriculum
@@ -97,20 +103,6 @@ GROUP BY section_id;
 
 #-----------------------------QUERY POINT #4-------------------------------------------------
 
-'''
-	def get_curric_distr(curric_name,semester1,semester2,year,mycursor):
-#query incomplete
-SELECT SUM(A+)
-FROM   sec_grades NATURAL JOIN section
-WHERE  section_id IN (SELECT section_id
-					FROM curric_reqs NATURAL JOIN curric_ops NATURAL JOIN section
-					WHERE (op_for = 'Comp Sci' OR req_for = 'Comp Sci') 
-					AND year BETWEEN 2018 AND 2019)
-			
-	vals = (curric_name,semester1,semester2,year)
-	mycursor.execute(sql,vals)
-	mycursor.fetchall()
-'''
 #############################################################################################
 # Function: get_curric_distro
 #
@@ -121,6 +113,7 @@ WHERE  section_id IN (SELECT section_id
 #       curric_name: The name of the curriculum
 #       semesters: A list of all the semesters needed
 #       mycursor: The cursor to query with
+#############################################################################################
 def get_curric_distro(curric_name, semesters, mycursor):
     sql = """SELECT curriculum.curric_name, SUM(`A+`), SUM(A), SUM(`A-`), 
                                             SUM(`B+`), SUM(A), SUM(`B-`),

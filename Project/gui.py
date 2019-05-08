@@ -1,4 +1,8 @@
-## GUI file
+######################################################################################
+# Authors: Grant Gasser, Jackson O'Donnell
+#
+# Purpose: Provide a GUI for our project
+######################################################################################
 
 import tkinter as tk
 import tkinter.messagebox
@@ -18,7 +22,7 @@ CURRIC_OPS_ATTR = ['course_name', 'op_for']
 TOPIC_ATTR = ['topic_id', 'topic_name', 'lvl', 'subject', 'units']
 TOPIC_CURRIC_ATTR = ['topic_id', 'curric_assoc']
 GOALS_ATTR = ['goal_id', 'description', 'curric_name', 'goal_hrs']
-SECTION_ATTR = ['section_id', 'course_name', 'semester', 'year', 'num_stu', 'comment1', 'comment2']
+SECTION_ATTR = ['course_name', 'section_id', 'course_name', 'semester', 'year', 'num_stu', 'comment1', 'comment2']
 SEC_GRADES_ATTR = ['section_id', 'A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F', 'I', 'W']
 GOAL_GRADES_ATTR = ['goal_id', 'A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F', 'I', 'W']
 COURSE_GOALS_ATTR = ['course_name', 'goal_id']
