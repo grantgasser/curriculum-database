@@ -100,7 +100,6 @@ GROUP BY section_id;
 '''
 	def get_curric_distr(curric_name,semester1,semester2,year,mycursor):
 #query incomplete
-
 SELECT SUM(A+)
 FROM   sec_grades NATURAL JOIN section
 WHERE  section_id IN (SELECT section_id
@@ -122,7 +121,7 @@ WHERE  section_id IN (SELECT section_id
 #       curric_name: The name of the curriculum
 #       semesters: A list of all the semesters needed
 #       mycursor: The cursor to query with
-def get_curric_distro(curric_name, semesters, mycursor)
+def get_curric_distro(curric_name, semesters, mycursor):
     sql = """SELECT curriculum.curric_name, SUM(`A+`), SUM(A), SUM(`A-`), 
                                             SUM(`B+`), SUM(A), SUM(`B-`),
                                             SUM(`C+`), SUM(A), SUM(`C-`),
@@ -209,25 +208,31 @@ def min_hours_given_curric(curric_name,mycursor):
 	mycursor.execute(sql,vals)
 	return mycursor.fetchall()
 
-def is_given_curric_goal_valid(curric_name,mycursor):
+def get_creds_for_course_goals(curric_name,mycursor):
 
 	sql = """SELECT SUM(cred_hrs)
 			 FROM courses NATURAL JOIN course_goals
 			 WHERE goal_id IN (SELECT goal_id
 				  			   FROM goals 
                   			   WHERE curric_name = %s)"""
-'''
- #    goalHrsSQL = """SELECT goal_hrs
-					# FROM goals 
-					# WHERE curric_name = %s)"""
 
 	vals = (curric_name,)
 
-	mycursor.execute(sql,goalHrs,SQL,vals)
+	mycursor.execute(sql,vals)
+	return mycursor.fetchall()	
 
-	bool valid
+def get_goal_hrs_given_curric(curric_name,mycusor):
 
-	if sql >= goalHrsSQL:
-		valid = 
-'''
+ 	sql = """SELECT (goal_hrs)
+ 			 FROM goals
+ 			 WHERE curric_name = %s"""
 
+ 	vals = (curric_name,)		
+	
+
+def is_curric_goal_valid(curric_name,mycursor):
+
+	if get_goal_hrs_given_curric(curric_name,mycursor) >= get_creds_for_course_goals(curric_name,mycursor):
+		print("NOT GOAL VALID")
+	else:
+		print("GOAL VALID")
