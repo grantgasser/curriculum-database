@@ -198,7 +198,7 @@ class MyGUI:
 
         ##################
         # QUERY CURRICULUM-COURSE (GET SECTION AND GRADE DIST)
-        self.course_curric_attr = ['curric_name', 'course_name', 'year1', 'year2']
+        self.course_curric_attr = ['curric_name', 'year1', 'year2']
         self.course_curric_attr_num = 0
         self.course_curric_vals = {}
 
@@ -218,8 +218,49 @@ class MyGUI:
         #################
 
         #################
-        # QUERY 
+        # QUERY 4
+        self.course_curric_attr = ['curric_name', 'course_name', 'year1', 'year2', 'semester1',
+                                'semester2', 'semester3', 'semester4']
+        self.course_curric_attr_num = 0
+        self.course_curric_vals = {}
 
+        self.mid_course_curric_label = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
+        self.mid_course_curric_label.place(relx=.41, rely=.5, relwidth=.2, relheight=0.12, anchor='n')
+        self.mid_course_curric_label['text'] = 'Get Curriculum Grade Dist.'
+
+        self.mid_course_curric_label_attr = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
+        self.mid_course_curric_label_attr.place(relx=.41, rely=.65, relwidth=.2, relheight=0.12, anchor='n')
+        self.mid_course_curric_label_attr['text'] = 'Enter curric_name'
+
+        self.mid_course_curric_label_entry  = tk.Entry(self.mid_frame, font=25)
+        self.mid_course_curric_label_entry .place(relx=.31, rely=.8, relwidth=.2, relheight=.15)
+
+        self.mid_course_curric_label_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda:[self.course_curric_query(self.mid_course_curric_label_entry.get()), self.next_input()])
+        self.mid_course_curric_label_button.place(relx=.52, rely=.8, relwidth = .06, relheight=.15)
+        #################
+        
+        #################
+        # QUERY 5
+        self.course_curric_attr = ['curric_name', 'course_name', 'year1', 'year2']
+        self.course_curric_attr_num = 0
+        self.course_curric_vals = {}
+
+        self.mid_course_curric_label = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
+        self.mid_course_curric_label.place(relx=.7, rely=.5, relwidth=.2, relheight=0.12, anchor='n')
+        self.mid_course_curric_label['text'] = 'Get Section Grade Dist.'
+
+        self.mid_course_curric_label_attr = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
+        self.mid_course_curric_label_attr.place(relx=.7, rely=.65, relwidth=.2, relheight=0.12, anchor='n')
+        self.mid_course_curric_label_attr['text'] = 'Enter curric_name'
+
+        self.mid_course_curric_label_entry  = tk.Entry(self.mid_frame, font=25)
+        self.mid_course_curric_label_entry .place(relx=.6, rely=.8, relwidth=.2, relheight=.15)
+
+        self.mid_course_curric_label_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda:[self.course_curric_query(self.mid_course_curric_label_entry.get()), self.next_input()])
+        self.mid_course_curric_label_button.place(relx=.81, rely=.8, relwidth = .06, relheight=.15)
+
+
+        #################
 
         ##################
         # UPDATE DATA

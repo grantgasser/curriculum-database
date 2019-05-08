@@ -113,10 +113,10 @@ GROUP BY section_id;
 #
 # Parameters:
 #       curric_name: The name of the curriculum
-#       semesters: A list of all the semesters needed
+#       times: A list of two years followed by up to four semesters (blank if no semster chosen)
 #       mycursor: The cursor to query with
 #############################################################################################
-def get_curric_distro(curric_name, semesters, mycursor):
+def get_curric_distro(curric_name, times, mycursor):
     sql = """SELECT curriculum.curric_name, SUM(`A+`), SUM(A), SUM(`A-`), 
                                             SUM(`B+`), SUM(A), SUM(`B-`),
                                             SUM(`C+`), SUM(A), SUM(`C-`),
@@ -128,12 +128,14 @@ def get_curric_distro(curric_name, semesters, mycursor):
                AND (section.course_name = curric_ops.course_name
                OR section.course_name = curric_reqs.course_name)
                AND section.section_id = sec_grades.section_id
+               AND (section.year >= %s OR section.year <= %s)
                AND ("""
-    for I in semesters:
-        sql += "section.semseter = %s OR "
+    for I in range(2, len(times)):
+        if times[2] != '':
+            sql += "section.semseter = %s OR "
     sql = sql[0:-3]
 
-    mycursor.execute(sql, semesters)
+    mycursor.execute(sql, times)
     return mycursor.fetchall()
 
     
