@@ -112,6 +112,37 @@ WHERE  section_id IN (SELECT section_id
 	mycursor.execute(sql,vals)
 	mycursor.fetchall()
 '''
+#############################################################################################
+# Function: get_curric_distro
+#
+# Purpose: For each curriculum and a given semester range, output the aggregate distribution
+#       of each outcome.
+#
+# Parameters:
+#       curric_name: The name of the curriculum
+#       semesters: A list of all the semesters needed
+#       mycursor: The cursor to query with
+def get_curric_distro(curric_name, semesters, mycursor)
+    sql = """SELECT curriculum.curric_name, SUM(`A+`), SUM(A), SUM(`A-`), 
+                                            SUM(`B+`), SUM(A), SUM(`B-`),
+                                            SUM(`C+`), SUM(A), SUM(`C-`),
+                                            SUM(`D+`), SUM(A), SUM(`D-`),
+                                            SUM(F), SUM(I), SUM(W) 
+             FROM curriculum, curric_ops, curric_reqs, section, sec_grades
+             WHERE (curriculum.curric_name = curric_ops.op_for
+               OR curriculum.curric_name = curric_reqs.req_for)
+               AND (section.course_name = curric_ops.course_name
+               OR section.course_name = curric_reqs.course_name)
+               AND section.section_id = sec_grades.section_id
+               AND ("""
+    for I in semesters:
+        sql += "section.semseter = %s OR "
+    sql = sql[0:-3]
+
+    mycursor.execute(sql, semesters)
+    return mycursor.fetchall()
+
+    
 
 #-------------------QUERY POINT #5-----------------------------------------------------------
 def get_curric_dash(curric_name,mycursor):
