@@ -236,7 +236,14 @@ def is_curric_goal_valid(curric_name,mycursor):
 
 # Use the topic logic function to get the topic category
 def get_curric_topic_category(curric_name, mycursor):
-    target = {'curric_name', curric_name}
+    vals = (curric_name,)
+    mycursor.execute("""SELECT min_cover2, min_cover3 FROM curriculum
+                        WHERE curric_name = %s""", vals)
+    covers = mycursor.fetchall()
+    target = {'curric_name': curric_name,
+              'min_cover2': covers[0][1],
+              'min_cover3': covers[0][2]}
+
     category = tl.calcCat(target, mycursor)
     if category == 'Substandard':
         print("SUBSTANDARD COVERAGE")

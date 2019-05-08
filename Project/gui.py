@@ -241,13 +241,13 @@ class MyGUI:
         
         #################
         # QUERY 5
-        self.course_curric_attr = ['curric_name', 'course_name', 'year1', 'year2']
+        self.course_curric_attr = ['curric_name']
         self.course_curric_attr_num = 0
         self.course_curric_vals = {}
 
         self.mid_course_curric_label = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
         self.mid_course_curric_label.place(relx=.7, rely=.5, relwidth=.2, relheight=0.12, anchor='n')
-        self.mid_course_curric_label['text'] = 'Get Section Grade Dist.'
+        self.mid_course_curric_label['text'] = 'Get Advanced Curric Info'
 
         self.mid_course_curric_label_attr = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
         self.mid_course_curric_label_attr.place(relx=.7, rely=.65, relwidth=.2, relheight=0.12, anchor='n')
