@@ -4,6 +4,8 @@
 # Purpose: Host the functions to obtain data from the database for the user
 #############################################################################################
 
+import topic_logic as tl
+
 ## Get data (Queries)
 #---------------------------QUERY POINT #1---------------------------------------------------
 #get curriculum
@@ -220,7 +222,7 @@ def get_goal_hrs_given_curric(curric_name,mycusor):
  			 FROM goals
  			 WHERE curric_name = %s"""
 
- 	vals = (curric_name,)		
+ 	vals = (curric_name,)	
 	
 
 def is_curric_goal_valid(curric_name,mycursor):
@@ -229,3 +231,20 @@ def is_curric_goal_valid(curric_name,mycursor):
 		print("NOT GOAL VALID")
 	else:
 		print("GOAL VALID")
+
+# Use the topic logic function to get the topic category
+def get_curric_topic_category(curric_name, mycursor):
+    target = {'curric_name', curric_name}
+    category = tl.calcCat(target, mycursor)
+    if category == 'Substandard':
+        print("SUBSTANDARD COVERAGE")
+    elif category == 'Unsatisfactory':
+        print("UNSATISFACTORY COVERAGE")
+    elif category == 'Inclusive':
+        print("INCLUSIVE COVERAGE")
+    elif category == 'Extensive':
+        print("EXTENSIVE COVERAGE")
+    elif category == 'Basic':
+        print("BASIC COVERAGE")
+    elif category == 'Basic-Plus':
+        print("BASIC-PLUS COVERAGE")

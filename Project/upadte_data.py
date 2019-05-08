@@ -70,7 +70,10 @@ def updateCourses(update_data, mycursor, mydb):
 def updateReqs(update_data, mycursor, mydb):
     attr = update_data['Attribute:'].replace("'", '')
     sql = """UPDATE curric_reqs SET """+attr+""" = %s
-             WHERE course_name = %s AND req_for = %s"""
+             WHERE course_name = %s AND req_for = %s
+             AND course_name NOT IN (SELECT course_name
+                                       FROM course_ops
+                                       WHERE course_name = %s)"""
 
     vals = (update_data['New Value:'], update_data['course_name'], update_data['req_for'])
 
@@ -96,9 +99,13 @@ def updateReqs(update_data, mycursor, mydb):
 def updateOps(update_data, mycursor, mydb):
     attr = update_data['Attribute:'].replace("'", '')
     sql = """UPDATE curric_ops SET """+attr+""" = %s
-             WHERE course_name = %s AND op_for = %s"""
+             WHERE course_name = %s AND op_for = %s
+               AND course_name NOT IN (SELECT course_name
+                                       FROM course_reqs
+                                       WHERE course_name = %s)"""
 
-    vals = (update_data['New Value:'], update_data['course_name'], update_data['op_for'])
+    vals = (update_data['New Value:'], update_data['course_name'], update_data['op_for'],
+            update_data['course_name'])
 
     mycursor.execute(sql, vals)
 
@@ -148,9 +155,10 @@ def updateTopic(update_data, mycursor, mydb):
 def updateTopicCurric(update_data, mycursor, mydb):
     attr = update_data['Attribute:'].replace("'", '')
     sql = """UPDATE topic_curric SET """+attr+""" = %s
-             WHERE topic_id = %s AND curric_assoc = %s"""
+             WHERE topic_id = %s AND curric_assoc = %s AND lvl = %s"""
 
-    vals = (update_data['New Value:'], update_data['topic_id'], update_data['curric_assoc'])
+    vals = (update_data['New Value:'], update_data['topic_id'], update_data['curric_assoc'],
+            update_data['lvl'])
 
     mycursor.execute(sql, vals)
 
@@ -301,12 +309,12 @@ def updateCourseGoals(update_data, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateTopicCurric(update_data, mycursor, mydb):
+def updateCourseTopic(update_data, mycursor, mydb):
     attr = update_data['Attribute:'].replace("'", '')
     sql = """UPDATE course_topic SET """+attr+""" = %s
-             WHERE topic_id = %s AND curric_assoc = %s"""
+             WHERE topic_id = %s AND course_name = %s"""
 
-    vals = (update_data['New Value:'], update_data['topic_id'], update_data['curric_assoc'])
+    vals = (update_data['New Value:'], update_data['topic_id'], update_data['course_name'])
 
     mycursor.execute(sql, vals)
 

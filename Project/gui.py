@@ -19,13 +19,14 @@ CURRIC_ATTR = ['curric_name', 'person_name', 'person_id', 'min_hours', 'min_cove
 COURSE_ATTR = ['course_name', 'subj_code', 'course_no', 'cred_hrs', 'description']
 CURRIC_REQS_ATTR = ['course_name', 'req_for']
 CURRIC_OPS_ATTR = ['course_name', 'op_for']
-TOPIC_ATTR = ['topic_id', 'topic_name', 'lvl', 'subject', 'units']
-TOPIC_CURRIC_ATTR = ['topic_id', 'curric_assoc']
+TOPIC_ATTR = ['topic_id', 'topic_name', 'subject', 'units']
+TOPIC_CURRIC_ATTR = ['topic_id', 'curric_assoc', 'lvl']
 GOALS_ATTR = ['goal_id', 'description', 'curric_name', 'goal_hrs']
 SECTION_ATTR = ['course_name', 'section_id', 'course_name', 'semester', 'year', 'num_stu', 'comment1', 'comment2']
 SEC_GRADES_ATTR = ['section_id', 'A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F', 'I', 'W']
 GOAL_GRADES_ATTR = ['goal_id', 'A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F', 'I', 'W']
 COURSE_GOALS_ATTR = ['course_name', 'goal_id']
+COURSE_TOPIC_ATTR = ['course_name', 'topic_id']
 
 #keys
 CURRIC_KEYS = ['curric_name', 'Attribute:', 'New Value:']
@@ -33,12 +34,13 @@ COURSE_KEYS = ['course_name', 'Attribute:', 'New Value:']
 CURRIC_REQS_KEYS = ['course_name', 'req_for', 'Attribute:', 'New Value:']
 CURRIC_OPS_KEYS = ['course_name', 'op_for', 'Attribute:', 'New Value:']
 TOPIC_KEYS = ['topic_name', 'topic_id', 'Attribute:', 'New Value:']
-TOPIC_CURRIC_KEYS = ['topic_id', 'curric_assoc', 'Attribute:', 'New Value:']
+TOPIC_CURRIC_KEYS = ['topic_id', 'curric_assoc', 'lvl', 'Attribute:', 'New Value:']
 GOALS_KEYS = ['goal_id', 'Attribute:', 'New Value:']
 SECTION_KEYS = ['section_id', 'Attribute:', 'New Value:']
-SEC_GRADES_KEYS = ['section_id', 'Attribute:', 'New Value:']
+SEC_GRADES_KEYS = ['course_name', 'section_id', 'Attribute:', 'New Value:']
 GOAL_GRADES_KEYS = ['goal_id', 'Attribute:', 'New Value:']
 COURSE_GOALS_KEYS = ['goal_id', 'course_name', 'Attribute:', 'New Value:']
+COURSE_TOPIC_KEYS = ['course_name', 'topic_id', 'Attribute:', 'New Value:']
 
 
 class MyGUI:
@@ -60,6 +62,7 @@ class MyGUI:
         self.new_course_goals_data = {}
         self.new_sec_grades_data = {}
         self.new_goal_grades_data = {}
+        self.new_course_topic_data = {}
 
         #for update data
         self.update_curric_data = {}
@@ -73,6 +76,7 @@ class MyGUI:
         self.update_course_goals_data = {}
         self.update_sec_grades_data = {}
         self.update_goal_grades_data = {}
+        self.update_course_topic_data = {}
 
         #for querying data
         self.curric_key_input = [] #user will enter keys, stored here
@@ -127,6 +131,7 @@ class MyGUI:
         self.input_menu_button.menu.add_command(label='course_goals', command=lambda:self.display_text('course_goals'))
         self.input_menu_button.menu.add_command(label='sec_grades', command=lambda:self.display_text('sec_grades'))
         self.input_menu_button.menu.add_command(label='goal_grades', command=lambda:self.display_text('goal_grades'))
+        self.input_menu_button.menu.add_command(label='course_topic', command=lambda:self.display_text('course_topic'))
 
         #Place menu
         self.input_menu_button.place(relwidth=0.15, relheight=.2)
@@ -212,6 +217,9 @@ class MyGUI:
         self.mid_course_curric_label_button.place(relx=.81, rely=.30, relwidth = .06, relheight=.15)
         #################
 
+        #################
+        # QUERY 
+
 
         ##################
         # UPDATE DATA
@@ -240,6 +248,7 @@ class MyGUI:
         self.update_menu_button.menu.add_command(label='course_goals', command=lambda:self.display_text_update('course_goals'))
         self.update_menu_button.menu.add_command(label='sec_grades', command=lambda:self.display_text_update('sec_grades'))
         self.update_menu_button.menu.add_command(label='goal_grades', command=lambda:self.display_text_update('goal_grades'))
+        self.update_menu_button.menu.add_command(label='course_topic', command=lambda:self.display_text_update('course_topic'))
 
         #Place menu
         self.update_menu_button.place(relwidth=0.15, relheight=.2)
@@ -314,6 +323,11 @@ class MyGUI:
         elif table_name == 'course_goals':
             self.insert_label_attr['text'] = 'Please enter ' + COURSE_GOALS_ATTR[self.attr]
             table_dict = COURSE_GOALS_ATTR
+        elif table_name == 'course_topic':
+            self.insert_label_attr['text'] = 'Please enter ' + COURSE_TOPIC_ATTR[self.attr]
+            table_dict = COURSE_TOPIC_ATTR
+
+            
 
 
         self.entry = tk.Entry(self.top_frame, font=25)
@@ -368,6 +382,8 @@ class MyGUI:
                 ins.insert_into_goal_grades(self.new_goal_grades_data, self.cursor, self.db)
             elif table_name == 'course_goals':
                 ins.insert_into_course_goals(self.new_course_goals_data, self.cursor, self.db)
+            elif table_name == 'course_topic':
+                ins.insert_into_course_topic(self.new_course_topic_data, self.cursor, self.db)
 
             #RESET
             self.update_curric_data = {}
@@ -381,6 +397,7 @@ class MyGUI:
             self.update_course_goals_data = {}
             self.update_sec_grades_data = {}
             self.update_goal_grades_data = {}
+            self.update_course_topic_data = {}
 
 
 
@@ -410,6 +427,8 @@ class MyGUI:
             self.new_goal_grades_data[table_dict[self.attr]] = input
         elif table_name == 'course_goals':
             self.new_course_goals_data[table_dict[self.attr]] = input
+        elif table_name == 'course_goals':
+            self.new_course_topic_data[table_dict[self.attr]] = input
 
 
 
@@ -614,6 +633,10 @@ class MyGUI:
         elif table_name == 'course_goals':
             self.update_label_attr['text'] = COURSE_GOALS_KEYS[self.update_attr]
             table_list = COURSE_GOALS_KEYS
+        elif table_name == 'course_topic':
+            self.update_label_attr['text'] = COURSE_TOPIC_KEYS[self.update_attr]
+            table_list = COURSE_TOPIC_KEYS
+
 
 
 

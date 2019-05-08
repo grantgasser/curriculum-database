@@ -49,7 +49,6 @@ def create_tables(mycursor):
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `topic`(
             `topic_id` int NOT NULL CHECK (topic_id >= 0),
             `topic_name` VARCHAR(25) NOT NULL,
-            `lvl` int NOT NULL CHECK (lvl > 0 AND lvl < 4),
             `subject` VARCHAR(5) NOT NULL,
             `units` FLOAT NOT NULL CHECK (units >= 0),
             PRIMARY KEY(`topic_id`, `topic_name`))
@@ -60,7 +59,8 @@ def create_tables(mycursor):
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `topic_curric`(
             `topic_id` int NOT NULL CHECK (topic_id >= 0),
             `curric_assoc` VARCHAR(25) NOT NULL,
-            PRIMARY KEY(topic_id, curric_assoc),
+            `lvl` int NOT NULL CHECK (lvl > 0 AND lvl < 4),
+            PRIMARY KEY(topic_id, curric_assoc, lvl),
             FOREIGN KEY (`curric_assoc`) REFERENCES `curriculum`(`curric_name`),
             FOREIGN KEY (`topic_id`) REFERENCES `topic`(`topic_id`))
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
