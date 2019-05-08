@@ -5,7 +5,7 @@
 ####################################################################################
 
 ####################################################################################
-# Function: updateCurriculum 
+# Function: updateCurriculum
 #
 # Purpose: updates the curriculum table
 #
@@ -16,11 +16,11 @@
 #        mycursor: A cursor to do the updates
 #        mydb: The database in which the table lies
 ####################################################################################
-def updateCurriculum(attr, data, curric, mycursor, mydb):
-    sql = """UPDATE curriculum SET """+attr+""" = %s
-             WHERE curric_name = %s AND person_id = %s""" 
+def updateCurriculum(update_data, mycursor, mydb):
+    attr = update_data['Attribute:'].replace("'", '')
+    sql = """UPDATE curriculum SET """ + attr + """ = %s WHERE curric_name = %s"""
 
-    vals = (attr, data, curric['curric_name'], curric['person_id'])
+    vals = (update_data['New Value:'], update_data['curric_name'])
 
     mycursor.execute(sql, vals)
 
@@ -31,9 +31,9 @@ def updateCurriculum(attr, data, curric, mycursor, mydb):
 
 ##################################################################################
 # Function: updateCourses
-# 
-# Purpose: Updates the courses table 
-# 
+#
+# Purpose: Updates the courses table
+#
 # Parameters:
 #        attr: The attribute to be edited
 #        data: The new value for the attribute
@@ -41,24 +41,25 @@ def updateCurriculum(attr, data, curric, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateCourses(attr, data, course, mycursor, mydb):
-    sql = """UPDATE courses SET """+attr+""" = %s
+def updateCourses(update_data, mycursor, mydb):
+    attr = update_data['Attribute:'].replace("'", '')
+    sql = """UPDATE courses SET """+ attr +""" = %s
              WHERE course_name = %s"""
 
-    vals = (data, course['course_name'])
+    vals = (update_data['New Value:'], update_data['course_name'])
 
     mycursor.execute(sql, vals)
 
     mydb.commit()
 
-    print('\nThe course has been updates') 
+    print('\nThe course has been updated')
 
 
 ##################################################################################
 # Function: updateReqs
-# 
+#
 # Purpose: Updates the course_reqs table
-# 
+#
 # Parameters:
 #        attr: The attribute to be edited
 #        data: The new value for the attribute
@@ -66,11 +67,12 @@ def updateCourses(attr, data, course, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateReqs(attr, data, req, mycursor, mydb):
+def updateReqs(update_data, mycursor, mydb):
+    attr = update_data['Attribute:'].replace("'", '')
     sql = """UPDATE curric_reqs SET """+attr+""" = %s
              WHERE course_name = %s AND req_for = %s"""
 
-    vals = (data, req['course_name'], req['req_for'])
+    vals = (update_data['New Value:'], update_data['course_name'], update_data['req_for'])
 
     mycursor.execute(sql, vals)
 
@@ -81,9 +83,9 @@ def updateReqs(attr, data, req, mycursor, mydb):
 
 ##################################################################################
 # Function: updateOps
-# 
+#
 # Purpose: Updates the curric_ops table
-# 
+#
 # Parameters:
 #        attr: The attribute to be edited
 #        data: The new value for the attribute
@@ -91,11 +93,12 @@ def updateReqs(attr, data, req, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateOps(attr, data, op, mycursor, mydb):
+def updateOps(update_data, mycursor, mydb):
+    attr = update_data['Attribute:'].replace("'", '')
     sql = """UPDATE curric_ops SET """+attr+""" = %s
              WHERE course_name = %s AND op_for = %s"""
 
-    vals = (data, op['course_name'], op['op_for'])
+    vals = (update_data['New Value:'], update_data['course_name'], update_data['op_for'])
 
     mycursor.execute(sql, vals)
 
@@ -106,9 +109,9 @@ def updateOps(attr, data, op, mycursor, mydb):
 
 ##################################################################################
 # Function: updateTopic
-# 
+#
 # Purpose: Updates the topic table
-# 
+#
 # Parameters:
 #        attr: The attribute to be edited
 #        data: The new value for the attribute
@@ -116,11 +119,12 @@ def updateOps(attr, data, op, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateTopic(attr, data, topic, mycursor, mydb):
+def updateTopic(update_data, mycursor, mydb):
+    attr = update_data['Attribute:'].replace("'", '')
     sql = """UPDATE topic SET """+attr+""" = %s
              WHERE topic_name = %s AND topic_id = %s"""
 
-    vals = (data, topic['topic_name'], topic['topic_id'])
+    vals = (update_data['New Value:'], update_data['topic_name'], update_data['topic_id'])
 
     mycursor.execute(sql, vals)
 
@@ -131,9 +135,9 @@ def updateTopic(attr, data, topic, mycursor, mydb):
 
 ##################################################################################
 # Function: updateTopicCurric
-# 
+#
 # Purpose: Updates the topic_curric table
-# 
+#
 # Parameters:
 #        attr: The attribute to be edited
 #        data: The new value for the attribute
@@ -141,11 +145,12 @@ def updateTopic(attr, data, topic, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateTopicCurric(attr, data, topic, mycursor, mydb):
+def updateTopicCurric(update_data, mycursor, mydb):
+    attr = update_data['Attribute:'].replace("'", '')
     sql = """UPDATE topic_curric SET """+attr+""" = %s
-             WHERE topic_id = %s"""
+             WHERE topic_id = %s AND curric_assoc = %s"""
 
-    vals = (data, topic['topic_id'])
+    vals = (update_data['New Value:'], update_data['topic_id'], update_data['curric_assoc'])
 
     mycursor.execute(sql, vals)
 
@@ -156,9 +161,9 @@ def updateTopicCurric(attr, data, topic, mycursor, mydb):
 
 ##################################################################################
 # Function: updateGoals
-# 
+#
 # Purpose: Updates the goals table
-# 
+#
 # Parameters:
 #        attr: The attribute to be edited
 #        data: The new value for the attribute
@@ -166,11 +171,12 @@ def updateTopicCurric(attr, data, topic, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateGoals(attr, data, goal, mycursor, mydb):
+def updateGoals(update_data, mycursor, mydb):
+    attr = update_data['Attribute:'].replace("'", '')
     sql = """UPDATE goals SET """+attr+""" = %s
              WHERE goal_id = %s"""
 
-    vals = (data, goal['goal_id'])
+    vals = (update_data['New Value:'], update_data['goal_id'])
 
     mycursor.execute(sql, vals)
 
@@ -181,9 +187,9 @@ def updateGoals(attr, data, goal, mycursor, mydb):
 
 ##################################################################################
 # Function: updateSection
-# 
+#
 # Purpose: Updates the section table
-# 
+#
 # Parameters:
 #        attr: The attribute to be edited
 #        data: The new value for the attribute
@@ -191,11 +197,12 @@ def updateGoals(attr, data, goal, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateSection(attr, data, section, mycursor, mydb):
+def updateSection(update_data, mycursor, mydb):
+    attr = update_data['Attribute:'].replace("'", '')
     sql = """UPDATE section SET """+attr+""" = %s
              WHERE section_id = %s"""
 
-    vals = (data, section['section_id'])
+    vals = (update_data['New Value:'], update_data['section_id'])
 
     mycursor.execute(sql, vals)
 
@@ -206,9 +213,9 @@ def updateSection(attr, data, section, mycursor, mydb):
 
 ##################################################################################
 # Function: updateSecGrades
-# 
+#
 # Purpose: Updates the sec_grades table
-# 
+#
 # Parameters:
 #        attr: The attribute to be edited
 #        data: The new value for the attribute
@@ -216,11 +223,12 @@ def updateSection(attr, data, section, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateSecGrades(attr, data, section, mycursor, mydb):
+def updateSecGrades(update_data, mycursor, mydb):
+    attr = update_data['Attribute:'].replace("'", '')
     sql = """UPDATE sec_grades SET """+attr+""" = %s
              WHERE section_id = %s"""
 
-    vals = (data, section['section_id'])
+    vals = (update_data['New Value:'], update_data['section_id'])
 
     mycursor.execute(sql, vals)
 
@@ -231,9 +239,9 @@ def updateSecGrades(attr, data, section, mycursor, mydb):
 
 ##################################################################################
 # Function: updateGoalGrades
-# 
+#
 # Purpose: Updates the goal_grades table
-# 
+#
 # Parameters:
 #        attr: The attribute to be edited
 #        data: The new value for the attribute
@@ -241,11 +249,12 @@ def updateSecGrades(attr, data, section, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateGoalGrades(attr, data, goal, mycursor, mydb):
+def updateGoalGrades(update_data, mycursor, mydb):
+    attr = update_data['Attribute:'].replace("'", '')
     sql = """UPDATE goal_grades SET """+attr+""" = %s
              WHERE goal_id = %s"""
 
-    vals = (data, goal['goal_id'])
+    vals = (update_data['New Value:'], update_data['goal_id'])
 
     mycursor.execute(sql, vals)
 
@@ -256,9 +265,9 @@ def updateGoalGrades(attr, data, goal, mycursor, mydb):
 
 ##################################################################################
 # Function: updateCourseGoals
-# 
+#
 # Purpose: Updates the course_goals table
-# 
+#
 # Parameters:
 #        attr: The attribute to be edited
 #        data: The new value for the attribute
@@ -266,16 +275,15 @@ def updateGoalGrades(attr, data, goal, mycursor, mydb):
 #        mycursor: A cursor to do the insertions
 #        mydb: The database in which the table lies
 ##################################################################################
-def updateCourseGoals(attr, data, goal, mycursor, mydb):
+def updateCourseGoals(update_data, mycursor, mydb):
+    attr = update_data['Attribute:'].replace("'", '')
     sql = """UPDATE course_goals SET """+attr+""" = %s
              WHERE goal_id = %s AND course_name = %s"""
 
-    vals = (data, goal['goal_id'], goal['course_name'])
+    vals = (update_data['New Value:'], update_data['goal_id'], update_data['course_name'])
 
     mycursor.execute(sql, vals)
 
     mydb.commit()
 
     print('\nThe course-goal relationship has been edited.')
-
-

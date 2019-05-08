@@ -24,7 +24,18 @@ GOAL_GRADES_ATTR = ['goal_id', 'A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-'
 COURSE_GOALS_ATTR = ['course_name', 'goal_id']
 
 #keys
-CURRIC_KEYS = ['curric_name', 'person_id']
+CURRIC_KEYS = ['curric_name', 'Attribute:', 'New Value:']
+COURSE_KEYS = ['course_name', 'Attribute:', 'New Value:']
+CURRIC_REQS_KEYS = ['course_name', 'req_for', 'Attribute:', 'New Value:']
+CURRIC_OPS_KEYS = ['course_name', 'op_for', 'Attribute:', 'New Value:']
+TOPIC_KEYS = ['topic_name', 'topic_id', 'Attribute:', 'New Value:']
+TOPIC_CURRIC_KEYS = ['topic_id', 'curric_assoc', 'Attribute:', 'New Value:']
+GOALS_KEYS = ['goal_id', 'Attribute:', 'New Value:']
+SECTION_KEYS = ['section_id', 'Attribute:', 'New Value:']
+SEC_GRADES_KEYS = ['section_id', 'Attribute:', 'New Value:']
+GOAL_GRADES_KEYS = ['goal_id', 'Attribute:', 'New Value:']
+COURSE_GOALS_KEYS = ['goal_id', 'course_name', 'Attribute:', 'New Value:']
+
 
 class MyGUI:
     def __init__(self, mycursor, mydb):
@@ -45,6 +56,19 @@ class MyGUI:
         self.new_course_goals_data = {}
         self.new_sec_grades_data = {}
         self.new_goal_grades_data = {}
+
+        #for update data
+        self.update_curric_data = {}
+        self.update_course_data = {}
+        self.update_curric_reqs_data = {}
+        self.update_curric_ops_data = {}
+        self.update_topic_data = {}
+        self.update_topic_curric_data = {}
+        self.update_goals_data = {}
+        self.update_section_data = {}
+        self.update_course_goals_data = {}
+        self.update_sec_grades_data = {}
+        self.update_goal_grades_data = {}
 
         #for querying data
         self.curric_key_input = [] #user will enter keys, stored here
@@ -142,7 +166,7 @@ class MyGUI:
         self.mid_curric_entry = tk.Entry(self.mid_frame, font=25)
         self.mid_curric_entry.place(relx=0, rely=.30, relwidth=.2, relheight=.15)
 
-        self.mid_curric_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda:[self.curric_query(self.mid_curric_entry.get()), self.next_curric_attr()])
+        self.mid_curric_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda:self.curric_query(self.mid_curric_entry.get()))
         self.mid_curric_button.place(relx=.21, rely=.30, relwidth = .06, relheight=.15)
         #################
 
@@ -180,8 +204,8 @@ class MyGUI:
         self.mid_course_curric_label_entry  = tk.Entry(self.mid_frame, font=25)
         self.mid_course_curric_label_entry .place(relx=.6, rely=.30, relwidth=.2, relheight=.15)
 
-        self.mid_course_label_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda:[self.course_curric_query(self.mid_course_curric_label_entry.get()), self.next_input()])
-        self.mid_course_label_button.place(relx=.81, rely=.30, relwidth = .06, relheight=.15)
+        self.mid_course_curric_label_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda:[self.course_curric_query(self.mid_course_curric_label_entry.get()), self.next_input()])
+        self.mid_course_curric_label_button.place(relx=.81, rely=.30, relwidth = .06, relheight=.15)
         #################
 
 
@@ -341,6 +365,19 @@ class MyGUI:
             elif table_name == 'course_goals':
                 ins.insert_into_course_goals(self.new_course_goals_data, self.cursor, self.db)
 
+            #RESET
+            self.update_curric_data = {}
+            self.update_course_data = {}
+            self.update_curric_reqs_data = {}
+            self.update_curric_ops_data = {}
+            self.update_topic_data = {}
+            self.update_topic_curric_data = {}
+            self.update_goals_data = {}
+            self.update_section_data = {}
+            self.update_course_goals_data = {}
+            self.update_sec_grades_data = {}
+            self.update_goal_grades_data = {}
+
 
 
     def insert_data(self, input, table_name, table_dict):
@@ -388,18 +425,29 @@ class MyGUI:
 
 
                 #reset button
-                self.mid_course_label_button.destroy()
-                self.mid_course_label_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda:[self.course_curric_query(self.mid_course_curric_label_entry.get()), self.next_input()])
-                self.mid_course_label_button.place(relx=.81, rely=.30, relwidth = .06, relheight=.15)
+                self.mid_course_curric_label_button.destroy()
+                self.mid_course_curric_label_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda:[self.course_curric_query(self.mid_course_curric_label_entry.get()), self.next_input()])
+                self.mid_course_curric_label_button.place(relx=.81, rely=.30, relwidth = .06, relheight=.15)
 
                 #run query
-                print('/nGetting section(s) grade distribution(s)...')
+                print('\nGetting section(s) grade distribution(s)...')
                 section_grade_dist = q.get_section(self.course_curric_vals[self.course_curric_attr[0]], self.course_curric_vals[self.course_curric_attr[1]],
                                                     self.course_curric_vals[self.course_curric_attr[2]], self.course_curric_vals[self.course_curric_attr[3]],
                                                     self.cursor)
 
+                #SEC_GRADES_ATTR
                 for tuple in section_grade_dist:
-                    print(tuple)
+                    print('\n')
+                    i = 0
+                    for attr in SEC_GRADES_ATTR:
+                        print(attr + ': ' + str(tuple[i]))
+                        i +=  1
+
+                self.mid_course_curric_notif = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
+                self.mid_course_curric_notif.place(relx=.75, rely=.6, relwidth=.25, relheight=0.12, anchor='n')
+                self.mid_course_curric_notif['text'] = 'Check the console for the result.'
+
+
 
 
     def next_input(self):
@@ -429,7 +477,7 @@ class MyGUI:
 
         #display course tuple to screen
         self.course_tup_result = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
-        self.course_tup_result.place(relx=.44, rely=.47, relwidth=.25, relheight=0.12, anchor='n')
+        self.course_tup_result.place(relx=.44, rely=.47, relwidth=.30, relheight=0.12, anchor='n')
         self.course_tup_result['text'] = str(course_tuple[0])
 
         #get curricula that course is required by
@@ -452,7 +500,7 @@ class MyGUI:
 
         #display course-curricula data
         self.curric_topic = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
-        self.curric_topic.place(relx=0.32, rely=.63, relwidth = .3, relheight=.25)
+        self.curric_topic.place(relx=0.30, rely=.63, relwidth = .3, relheight=.25)
         self.curric_topic['text'] = 'Required by: ' + str(reqs) + '\n Optional for: ' + str(ops)
 
     #resets entry field and button for course query
@@ -463,83 +511,50 @@ class MyGUI:
         self.mid_course_label_entry .place(relx=.31, rely=.30, relwidth=.2, relheight=.15)
 
 
-    def next_curric_attr(self):
-        #print(len(self.curric_key_input))
-        print(self.curric_key_input)
-
-        attr = ''
-
-        #reset input button, change label
-        self.mid_curric_label_attr.destroy()
-        self.mid_curric_entry.destroy()
-        self.mid_curric_button.destroy()
-
-        #already entered curric_name, now need person_id
-        if len(self.curric_key_input) == 1:
-            attr = 'person_id'
-        else:
-            #reset and start over for new input
-            self.curric_key_input = []
-            attr = 'curric_name'
-
-
-        self.mid_curric_label_attr = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
-        self.mid_curric_label_attr.place(relx=.10, rely=.15, relwidth=.2, relheight=0.12, anchor='n')
-        self.mid_curric_label_attr['text'] = 'Enter ' + attr
-
-        self.mid_curric_entry = tk.Entry(self.mid_frame, font=25)
-        self.mid_curric_entry.place(relx=0, rely=.30, relwidth=.2, relheight=.15)
-
-        self.mid_curric_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda:[self.curric_query(self.mid_curric_entry.get()), self.next_curric_attr()])
-        self.mid_curric_button.place(relx=.21, rely=.30, relwidth = .06, relheight=.15)
-
-
-
     def curric_query(self, input):
         #print(input)
         self.curric_key_input.append(input)
 
-        if len(self.curric_key_input) == 2:
-            #data from curriculum table
-            curric_info = q.get_curric(self.curric_key_input[0], self.curric_key_input[1], self.cursor)
 
-            for tuple in curric_info:
-                print('\nResult: ', tuple, '\n')
-                tup_str = str(tuple)
-                #print(tup_str)
-                self.curric_tup_result = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
-                self.curric_tup_result.place(relx=0.005, rely=.48, relwidth = .3, relheight=.12)
-                self.curric_tup_result['text'] = tup_str
+        curric_info = q.get_curric(input, self.cursor)
 
-            #data from topic_curric table (topics associated w/ this curric)
-            topic_curric = q.get_topic_curric(self.curric_key_input[0], self.cursor)
+        for tuple in curric_info:
+            print('\nResult: ', tuple, '\n')
+            tup_str = str(tuple)
+            #print(tup_str)
+            self.curric_tup_result = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
+            self.curric_tup_result.place(relx=0.005, rely=.48, relwidth = .3, relheight=.12)
+            self.curric_tup_result['text'] = tup_str
 
-            topics = []
-            for tuple in topic_curric:
-                print('Topic:', tuple)
-                topics.append(tuple[0])
+        #data from topic_curric table (topics associated w/ this curric)
+        topic_curric = q.get_topic_curric(input, self.cursor)
+
+        topics = []
+        for tuple in topic_curric:
+            print('Topic:', tuple)
+            topics.append(tuple[0])
 
 
-            #data from curric_reqs (required courses for given curric)
-            curric_reqs = q.get_reqs_given_curric(self.curric_key_input[0], self.cursor)
+        #data from curric_reqs (required courses for given curric)
+        curric_reqs = q.get_reqs_given_curric(input, self.cursor)
 
-            reqs = []
-            for tuple in curric_reqs:
-                print('Required Course(s):', tuple)
-                reqs.append(tuple[0])
+        reqs = []
+        for tuple in curric_reqs:
+            print('Required Course(s):', tuple)
+            reqs.append(tuple[0])
 
-            #data from curric_ops (optional courses for given curric)
-            curric_ops = q.get_ops_given_curric(self.curric_key_input[0], self.cursor)
+        #data from curric_ops (optional courses for given curric)
+        curric_ops = q.get_ops_given_curric(input, self.cursor)
 
-            ops = []
-            for tuple in curric_ops:
-                print('Optional Course(s):', tuple)
-                ops.append(tuple[0])
+        ops = []
+        for tuple in curric_ops:
+            print('Optional Course(s):', tuple)
+            ops.append(tuple[0])
 
-            #show results on GUI
-            self.curric_topic = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
-            self.curric_topic.place(relx=0.005, rely=.63, relwidth = .3, relheight=.33)
-            self.curric_topic['text'] = 'Topics: ' + str(topics) + '\n Opt Course(s): ' + str(ops) + '\n Req Course(s): ' + str(reqs)
+        #show results on GUI
+        self.curric_topic = tk.Label(self.mid_frame, anchor='n', font=('Times', '12'))
+        self.curric_topic.place(relx=0.005, rely=.63, relwidth = .3, relheight=.33)
+        self.curric_topic['text'] = 'Topics: ' + str(topics) + '\n Opt Course(s): ' + str(ops) + '\n Req Course(s): ' + str(reqs)
 
 
 
@@ -558,47 +573,147 @@ class MyGUI:
         self.update_label['text'] = 'Please enter the attribute of ' + table_name + ' that you want to change.'
 
         self.update_label_attr = tk.Label(self.bottom_frame, font=('Times', '12'))
-        self.update_label_attr.place(relx =.2, rely=.2, relwidth=0.12, relheight=.2)
+        self.update_label_attr.place(relx =.2, rely=.2, relwidth=0.15, relheight=.2)
 
 
-        self.update_label_attr['text'] = 'Attribute:'
+        table_list = []
+        if table_name == 'curriculum':
+            self.update_label_attr['text'] = CURRIC_KEYS[self.update_attr]
+            table_list = CURRIC_KEYS
+        elif table_name == 'courses':
+            self.update_label_attr['text'] = COURSE_KEYS[self.update_attr]
+            table_list = COURSE_KEYS
+        elif table_name == 'curric_reqs':
+            self.update_label_attr['text'] = CURRIC_REQS_KEYS[self.update_attr]
+            table_list = CURRIC_REQS_KEYS
+        elif table_name == 'curric_ops':
+            self.update_label_attr['text'] = CURRIC_OPS_KEYS[self.update_attr]
+            table_list = CURRIC_OPS_KEYS
+        elif table_name == 'topic':
+            self.update_label_attr['text'] = TOPIC_KEYS[self.update_attr]
+            table_list = TOPIC_KEYS
+        elif table_name == 'topic_curric':
+            self.update_label_attr['text'] = TOPIC_CURRIC_KEYS[self.update_attr]
+            table_list = TOPIC_CURRIC_KEYS
+        elif table_name == 'goals':
+            self.update_label_attr['text'] = GOALS_KEYS[self.update_attr]
+            table_list = GOALS_KEYS
+        elif table_name == 'section':
+            self.update_label_attr['text'] = SECTION_KEYS[self.update_attr]
+            table_list = SECTION_KEYS
+        elif table_name == 'sec_grades':
+            self.update_label_attr['text'] = SEC_GRADES_KEYS[self.update_attr]
+            table_list = SEC_GRADES_KEYS
+        elif table_name == 'goal_grades':
+            self.update_label_attr['text'] = GOAL_GRADES_KEYS[self.update_attr]
+            table_list = GOAL_GRADES_KEYS
+        elif table_name == 'course_goals':
+            self.update_label_attr['text'] = COURSE_GOALS_KEYS[self.update_attr]
+            table_list = COURSE_GOALS_KEYS
+
+
 
         #Display entry field and button
         self.update_entry = tk.Entry(self.bottom_frame, font=25)
-        self.update_entry.place(relx =.33, rely=.2, relwidth=0.2, relheight=.2)
+        self.update_entry.place(relx =.36, rely=.2, relwidth=0.2, relheight=.2)
 
-        self.button = tk.Button(self.bottom_frame, text="Enter", font=40, command=lambda: [self.update(self.update_entry.get(), table_name), self.next_update_attr()])
-        self.button.place(relx=0.55, rely=.2, relwidth=0.12, relheight=0.2)
+        self.button = tk.Button(self.bottom_frame, text="Enter", font=40, command=lambda: [self.update(self.update_entry.get(), table_name, table_list), self.next_update_attr(table_name, table_list)])
+        self.button.place(relx=0.57, rely=.2, relwidth=0.12, relheight=0.2)
 
 
-    def next_update_attr(self):
-        print(self.update_attr_input)
-        #self.update_attr_input = []
-        attr = ''
+    def next_update_attr(self, table_name, table_list):
+        self.update_attr += 1
 
-        self.update_label_attr.destroy()
-        self.update_entry.destroy()
 
-        if len(self.update_attr_input) == 1:
-            attr = 'New Value:'
+        if self.update_attr < len(table_list):
+            self.update_label_attr.destroy()
+            self.update_entry.destroy()
+
+            #ask for next attribute
+            self.update_label_attr = tk.Label(self.bottom_frame, font=('Times', '12'))
+            self.update_label_attr.place(relx =.2, rely=.2, relwidth=0.15, relheight=.2)
+            self.update_label_attr['text'] = table_list[self.update_attr]
+
+            #reset entry
+            self.update_entry = tk.Entry(self.bottom_frame, font=25)
+            self.update_entry.place(relx =.36, rely=.2, relwidth=0.2, relheight=.2)
+
+            #reset button
+            self.button = tk.Button(self.bottom_frame, text="Enter", font=40, command=lambda: [self.update(self.update_entry.get(), table_name, table_list), self.next_update_attr(table_name, table_list)])
+            self.button.place(relx=0.57, rely=.2, relwidth=0.12, relheight=0.2)
+
+
+        #run query
         else:
-            self.update_attr_input = []
-            attr = 'Attribute:'
+            if table_name == 'curriculum':
+                print('Update data: ', self.update_curric_data)
+                up.updateCurriculum(self.update_curric_data, self.cursor, self.db)
+            elif table_name == 'courses':
+                print('Update data: ', self.update_course_data)
+                up.updateCourses(self.update_course_data, self.cursor, self.db)
+            elif table_name == 'curric_reqs':
+                print('Update data: ', self.update_course_data)
+                up.updateReqs(self.update_course_data, self.cursor, self.db)
+            elif table_name == 'curric_ops':
+                print('Update data: ', self.update_curric_data)
+                up.updateOps(self.update_curric_data, self.cursor, self.db)
+            elif table_name == 'topic':
+                print('Update data: ', self.update_topic_data)
+                up.updateTopic(self.update_topic_data, self.cursor, self.db)
+            elif table_name == 'topic_curric':
+                print('Update data: ', self.update_topic_curric_data)
+                up.updateTopicCurric(self.update_topic_curric_data, self.cursor, self.db)
+            elif table_name == 'goals':
+                print('Update data: ', self.update_goals_data)
+                up.updateGoals(self.update_goals_data, self.cursor, self.db)
+            elif table_name == 'section':
+                print('Update data: ', self.update_section_data)
+                up.updateSection(self.update_section_data, self.cursor, self.db)
+            elif table_name == 'sec_grades':
+                print('Update data: ', self.update_sec_grades_data)
+                up.updateSecGrades(self.update_sec_grades_data, self.cursor, self.db)
+            elif table_name == 'goal_grades':
+                print('Update data: ', self.update_goal_grades_data)
+                up.updateGoalGrades(self.update_goal_grades_data, self.cursor, self.db)
+            elif table_name == 'course_goals':
+                print('Update data: ', self.update_course_goals_data)
+                up.updateReqs(self.update_course_goals_data, self.cursor, self.db)
 
-        self.update_label_attr = tk.Label(self.bottom_frame, font=('Times', '12'))
-        self.update_label_attr.place(relx =.2, rely=.2, relwidth=0.12, relheight=.2)
-        self.update_label_attr['text'] = attr
 
-        self.update_entry = tk.Entry(self.bottom_frame, font=25)
-        self.update_entry.place(relx =.33, rely=.2, relwidth=0.2, relheight=.2)
+            #AFTER UPDATE, RESET ENTRY AND BUTTON
+            self.update_attr = 0
+
+            #reset entry
+            self.update_entry = tk.Entry(self.bottom_frame, font=25)
+            self.update_entry.place(relx =.36, rely=.2, relwidth=0.2, relheight=.2)
+
+            #reset button
+            self.button = tk.Button(self.bottom_frame, text="Enter", font=40, command=lambda: [self.update(self.update_entry.get(), table_name, table_list), self.next_update_attr(table_name, table_list)])
+            self.button.place(relx=0.57, rely=.2, relwidth=0.12, relheight=0.2)
 
 
-    def update(self, input, table_name):
-        print(input)
-        self.update_attr_input.append(input)
+    def update(self, input, table_name, table_list):
+        #print(input)
 
-        if len(self.update_attr_input) == 2:
-            print('running update on', table_name)
-
-            #if table_name == 'curriculum':
-                #up.updateCurriculum(update_attr_input[0], update_attr_input[1])
+        if table_name == 'curriculum':
+            self.update_curric_data[table_list[self.update_attr]] = input
+        elif table_name == 'courses':
+            self.update_course_data[table_list[self.update_attr]] = input
+        elif table_name == 'curric_reqs':
+            self.update_curric_reqs_data[table_list[self.update_attr]] = input
+        elif table_name == 'curric_ops':
+            self.update_curric_ops_data[table_list[self.update_attr]] = input
+        elif table_name == 'topic':
+            self.update_topic_data[table_list[self.update_attr]] = input
+        elif table_name == 'topic_curric':
+            self.update_topic_curric_data[table_list[self.update_attr]] = input
+        elif table_name == 'goals':
+            self.update_goals_data[table_list[self.update_attr]] = input
+        elif table_name == 'section':
+            self.update_section_data[table_list[self.update_attr]] = input
+        elif table_name == 'sec_grades':
+            self.update_sec_grades_data[table_list[self.update_attr]] = input
+        elif table_name == 'goal_grades':
+            self.update_goal_grades_data[table_list[self.update_attr]] = input
+        elif table_name == 'course_goals':
+            self.update_course_goals_data[table_list[self.update_attr]] = input
