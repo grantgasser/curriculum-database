@@ -66,16 +66,23 @@ def insert_into_courses(new_data, mycursor, mydb):
 #        mydb: The database in which the table lies
 ##################################################################################
 def insert_into_reqs(new_data, mycursor, mydb):
-    sql = """INSERT INTO curric_reqs (course_name, req_for)
-             VALUES (%s, %s);"""
-
+    sql = """SELECT * FROM curric_ops WHERE course_name = %s AND op_for = %s;"""
     vals = (new_data['course_name'], new_data['req_for'])
-
     mycursor.execute(sql, vals)
+    test = mycursor.fetchall()
 
-    mydb.commit()
+    if test:
+        print("\nThe course is already an option and cannot become a requirement!")
+    else:
+        sql = """INSERT INTO curric_reqs (course_name, req_for)
+                 VALUES (%s, %s);"""
 
-    print('\nThe new course requirement has been added.')
+
+        mycursor.execute(sql, vals)
+
+        mydb.commit()
+
+        print('\nThe new course requirement has been added.')
 
 
 ##################################################################################
@@ -89,16 +96,23 @@ def insert_into_reqs(new_data, mycursor, mydb):
 #        mydb: The database in which the table lies
 ##################################################################################
 def insert_into_ops(new_data, mycursor, mydb):
-    sql = """INSERT INTO curric_ops (course_name, op_for)
+    sql = """SELECT * FROM curric_reqs WHERE course_name = %s AND req_for = %s;"""
+    vals = (new_data['course_name'], new_data['op_for'])
+    mycursor.execute(sql, vals)
+    test = mycursor.fetchall()
+
+    if test:
+        print("\nThe course is already a requirement and cannot become an option!")
+    else:
+        sql = """INSERT INTO curric_ops (course_name, op_for)
              VALUES (%s, %s);"""
 
-    vals = (new_data['course_name'], new_data['op_for'])
 
-    mycursor.execute(sql, vals)
+        mycursor.execute(sql, vals)
 
-    mydb.commit()
+        mydb.commit()
 
-    print('\nThe new course option has been added.')
+        print('\nThe new course option has been added.')
 
 
 ##################################################################################
@@ -112,10 +126,10 @@ def insert_into_ops(new_data, mycursor, mydb):
 #        mydb: The database in which the table lies
 ##################################################################################
 def insert_into_topic(new_data, mycursor, mydb):
-    sql = """INSERT INTO topic (topic_id, topic_name, lvl, subject, units)
-             VALUES (%s, %s, %s, %s, %s);"""
+    sql = """INSERT INTO topic (topic_id, topic_name, subject, units)
+             VALUES (%s, %s, %s, %s);"""
 
-    vals = (new_data['topic_id'], new_data['topic_name'], new_data['lvl'],
+    vals = (new_data['topic_id'], new_data['topic_name'],
             new_data['subject'], new_data['units'])
 
     mycursor.execute(sql, vals)
@@ -136,10 +150,10 @@ def insert_into_topic(new_data, mycursor, mydb):
 #        mydb: The database in which the table lies
 ##################################################################################
 def insert_into_topic_curric(new_data, mycursor, mydb):
-    sql = """INSERT INTO topic_curric (topic_id, curric_assoc)
-             VALUES (%s, %s);"""
+    sql = """INSERT INTO topic_curric (topic_id, curric_assoc, lvl)
+             VALUES (%s, %s, %s);"""
 
-    vals = (new_data['topic_id'], new_data['curric_assoc'])
+    vals = (new_data['topic_id'], new_data['curric_assoc'], new_data['lvl'])
 
     mycursor.execute(sql, vals)
 
@@ -264,3 +278,26 @@ def insert_into_course_goals(new_data, mycursor, mydb):
     mydb.commit()
 
     print('\nThe goal with id '+new_data['goal_id']+' has been added to the course '+new_data['course_name']+'.')
+
+
+##################################################################################
+# Function: insert_into_course_topic
+#
+# Purpose: Insert data into the course_topic table of the database
+#
+# Parameters:
+#        new_data: A dictionary of the data to be inserted
+#        mycursor: A cursor to do the insertions
+#        mydb: The database in which the table lies
+##################################################################################
+def insert_into_course_topic(new_data, mycursor, mydb):
+    sql = """INSERT INTO course_topic (course_name, topic_id)
+             VALUES (%s, %s);"""
+
+    vals = (new_data['course_name'], new_data['topic_id'])
+
+    mycursor.execute(sql, vals)
+
+    mydb.commit()
+
+    print('\nThe topic with id '+new_data['topic_id']+' has been added to the course '+new_data['course_name']+'.')
