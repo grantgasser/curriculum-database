@@ -25,18 +25,17 @@
 #       Substandard: Some level 1 topics are NOT covered by required courses.
 #
 # Parameters:
-#       target: A dictionary containing the primary key of the curriculum, as welll as
+#       target: A dictionary containing the primary key of the curriculum, as well as
 #             the percentage of level 2 & 3 topic coverage required for coverage
 #       mycursor: The cursor to execute the queries for information
-#       mydb: The database in which the curriculum lies
 #######################################################################################
-def calcCat(target, mycursor, mydb):
+def calcCat(target, mycursor):
     topicSQL = """SELECT topic.subject, topic.units, topic.topic_id, topic.topic_name
                   FROM curriculum, topic, topic_curric
                   WHERE topic_curric.topic_id = topic.topic_id
                   AND topic_curric.curric_assoc = curriculum.curric_name
-                  AND curriculum.curric_name = %s AND curriculum.person_id = %s
-                  AND topic.lvl = %s
+                  AND curriculum.curric_name = %s
+                  AND topic_curric.lvl = %s
                   GROUP BY topic.topic_id, topic.topic_name"""
     reqSQL = """SELECT courses.subj_code, courses.cred_hrs, courses.course_name
                 FROM curriculum, curric_reqs, courses
@@ -54,7 +53,7 @@ def calcCat(target, mycursor, mydb):
     #Create a dictionary of all the subjects in the level 1 topics
     lvl1Subjects = {}
 
-    vals = (target['curric_name'], target['person_id'], 1)
+    vals = (target['curric_name'], 1)
 
     mycursor.execute(topicSQL, vals)
     lvl1Units = mycursor.fetchall()
@@ -84,7 +83,7 @@ def calcCat(target, mycursor, mydb):
             return 'Substandard'
 
     #Now check if it has enough required hours for level 2 topics
-    vals[2] = 2
+    vals[1] = 2
     lvl2Subjects = {}
 
     mycursor.execute(topicSQL, vals)
@@ -114,9 +113,9 @@ def calcCat(target, mycursor, mydb):
             return 'Unsatisfactory'
     
     #Find outif lvl 2 is fully covered by required courses or not
-    bool l2Covered = True
+    l2Covered = True
     for I, V in lvl2Subjects:
-        if (leftReqs[I] < lvl2Subjects[I])
+        if leftReqs[I] < lvl2Subjects[I]:
             l2Covered = False
     if l2Covered:
         for I, V in leftReqs:
@@ -125,7 +124,7 @@ def calcCat(target, mycursor, mydb):
         for J in opHrs:
             if J[0] in leftReqs:
                 leftReqs[I] += opHrs[1]
-        vals[2] = 3
+        vals[1] = 3
         lvl3Subjects = {}
         mycursor.execute(topicSQL, vals)
         lvl3Units = mycursor.fetchall()
@@ -147,7 +146,7 @@ def calcCat(target, mycursor, mydb):
         for I, V in lvl2Subjects:
             if I not in opHrs:
                 return 'Basic'
-            if (leftReqs[I]+opHrs[I])) < lvl2Subjects[I]:
+            if (leftReqs[I]+opHrs[I]) < lvl2Subjects[I]:
                 return 'Basic'
         return 'Basic-Plus'
 
