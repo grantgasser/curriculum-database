@@ -1,12 +1,21 @@
+#############################################################################################
+# Authors: Zee Dugar, Grant Gasser, Jackson O'Donnell
+#
+# Purpose: Host the functions to obtain data from the database for the user
+#############################################################################################
+
+import topic_logic as tl
+
 ## Get data (Queries)
 #---------------------------QUERY POINT #1---------------------------------------------------
 #get curriculum
 #arguments: key of the table (curric_name, person_id) and the sql cursor
-def get_curric(curric_name, mycursor):
+def get_curric(curric_name, person_id, mycursor):
     sql = """SELECT *
     		 FROM curriculum
-    		 WHERE curric_name = %s"""
-    vals = (curric_name,)
+    		 WHERE curric_name = %s
+             AND person_id = %s"""
+    vals = (curric_name, person_id)
 
     mycursor.execute(sql,vals)
     return mycursor.fetchall()
@@ -96,20 +105,6 @@ GROUP BY section_id;
 
 #-----------------------------QUERY POINT #4-------------------------------------------------
 
-'''
-	def get_curric_distr(curric_name,semester1,semester2,year,mycursor):
-#query incomplete
-SELECT SUM(A+)
-FROM   sec_grades NATURAL JOIN section
-WHERE  section_id IN (SELECT section_id
-					FROM curric_reqs NATURAL JOIN curric_ops NATURAL JOIN section
-					WHERE (op_for = 'Comp Sci' OR req_for = 'Comp Sci')
-					AND year BETWEEN 2018 AND 2019)
-
-	vals = (curric_name,semester1,semester2,year)
-	mycursor.execute(sql,vals)
-	mycursor.fetchall()
-'''
 #############################################################################################
 # Function: get_curric_distro
 #
@@ -118,9 +113,10 @@ WHERE  section_id IN (SELECT section_id
 #
 # Parameters:
 #       curric_name: The name of the curriculum
-#       semesters: A list of all the semesters needed
+#       times: A list of two years followed by up to four semesters (blank if no semster chosen)
 #       mycursor: The cursor to query with
-def get_curric_distro(curric_name, semesters, mycursor):
+#############################################################################################
+def get_curric_distro(curric_name, times, mycursor):
     sql = """SELECT curriculum.curric_name, SUM(`A+`), SUM(A), SUM(`A-`),
                                             SUM(`B+`), SUM(A), SUM(`B-`),
                                             SUM(`C+`), SUM(A), SUM(`C-`),
@@ -132,12 +128,14 @@ def get_curric_distro(curric_name, semesters, mycursor):
                AND (section.course_name = curric_ops.course_name
                OR section.course_name = curric_reqs.course_name)
                AND section.section_id = sec_grades.section_id
+               AND (section.year >= %s OR section.year <= %s)
                AND ("""
-    for I in semesters:
-        sql += "section.semseter = %s OR "
+    for I in range(2, len(times)):
+        if times[2] != '':
+            sql += "section.semseter = %s OR "
     sql = sql[0:-3]
 
-    mycursor.execute(sql, semesters)
+    mycursor.execute(sql, times)
     return mycursor.fetchall()
 
 
@@ -235,3 +233,27 @@ def is_curric_goal_valid(curric_name,mycursor):
 		print("NOT GOAL VALID")
 	else:
 		print("GOAL VALID")
+
+# Use the topic logic function to get the topic category
+def get_curric_topic_category(curric_name, mycursor):
+    vals = (curric_name,)
+    mycursor.execute("""SELECT min_cover2, min_cover3 FROM curriculum
+                        WHERE curric_name = %s""", vals)
+    covers = mycursor.fetchall()
+    target = {'curric_name': curric_name,
+              'min_cover2': covers[0][1],
+              'min_cover3': covers[0][2]}
+
+    category = tl.calcCat(target, mycursor)
+    if category == 'Substandard':
+        print("SUBSTANDARD COVERAGE")
+    elif category == 'Unsatisfactory':
+        print("UNSATISFACTORY COVERAGE")
+    elif category == 'Inclusive':
+        print("INCLUSIVE COVERAGE")
+    elif category == 'Extensive':
+        print("EXTENSIVE COVERAGE")
+    elif category == 'Basic':
+        print("BASIC COVERAGE")
+    elif category == 'Basic-Plus':
+        print("BASIC-PLUS COVERAGE")

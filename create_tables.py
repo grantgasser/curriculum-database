@@ -49,7 +49,6 @@ def create_tables(mycursor):
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `topic`(
             `topic_id` int NOT NULL CHECK (topic_id >= 0),
             `topic_name` VARCHAR(25) NOT NULL,
-            `lvl` int NOT NULL CHECK (lvl > 0 AND lvl < 4),
             `subject` VARCHAR(5) NOT NULL,
             `units` FLOAT NOT NULL CHECK (units >= 0),
             PRIMARY KEY(`topic_id`, `topic_name`))
@@ -60,7 +59,8 @@ def create_tables(mycursor):
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `topic_curric`(
             `topic_id` int NOT NULL CHECK (topic_id >= 0),
             `curric_assoc` VARCHAR(25) NOT NULL,
-            PRIMARY KEY(topic_id, curric_assoc),
+            `lvl` int NOT NULL CHECK (lvl > 0 AND lvl < 4),
+            PRIMARY KEY(topic_id, curric_assoc, lvl),
             FOREIGN KEY (`curric_assoc`) REFERENCES `curriculum`(`curric_name`),
             FOREIGN KEY (`topic_id`) REFERENCES `topic`(`topic_id`))
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
@@ -93,6 +93,7 @@ def create_tables(mycursor):
 
     #mycursor.execute("DROP TABLE IF EXISTS `sec_grades`")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS `sec_grades`(
+            `course_name` VARCHAR(25) NOT NULL,
             `section_id` int NOT NULL CHECK (section_id >= 0),
             `A+` int NOT NULL CHECK (`A+` >= 0),
             `A` int NOT NULL CHECK (A >= 0),
@@ -109,8 +110,9 @@ def create_tables(mycursor):
             `F` int NOT NULL CHECK (F >= 0),
             `I` int NOT NULL CHECK (I >= 0),
             `W` int NOT NULL CHECK (W >= 0),
-            PRIMARY KEY(`section_id`),
-            FOREIGN KEY(`section_id`) REFERENCES `section`(`section_id`))
+            PRIMARY KEY(`section_id`, `course_name`),
+            FOREIGN KEY(`section_id`) REFERENCES `section`(`section_id`),
+            FOREIGN KEY(`course_name`) REFERENCES `courses`(`course_name`))
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
 
@@ -147,3 +149,12 @@ def create_tables(mycursor):
             FOREIGN KEY (`goal_id`) REFERENCES `goals`(`goal_id`))
             ENGINE=InnoDB, DEFAULT CHARSET=latin1
             """)
+
+    #mycursor.execute("DROP TABLE IF EXISTS `course_topic`;")
+    mycursor.execute("""CREATE TABLE IF NOT EXISTS `course_topic`(
+        `course_name` VARCHAR(25) NOT NULL,
+        `topic_id` int NOT NULL,
+        PRIMARY KEY (`course_name`, `topic_id`),
+        FOREIGN KEY (`course_name`) REFERENCES `courses`(`course_name`),
+        FOREIGN KEY (`topic_id`) REFERENCES `topic`(`topic_id`))
+        ENGINE=InnoDB, DEFAULT CHARSET=latin1;""")
