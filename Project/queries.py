@@ -89,7 +89,7 @@ def get_ops_given_course(course_name,mycursor):
 def get_section(curric_name,course_name,year1,year2, mycursor):
 
 	sql = """SELECT *
-FROM sec_grades 
+FROM sec_grades
 WHERE sec_grades.section_id IN (SELECT section.section_id
 					 FROM section JOIN curric_reqs JOIN curric_ops
                      WHERE req_for = %s OR op_for = %s
@@ -117,11 +117,11 @@ GROUP BY section_id;
 #       mycursor: The cursor to query with
 #############################################################################################
 def get_curric_distro(curric_name, times, mycursor):
-    sql = """SELECT curriculum.curric_name, SUM(`A+`), SUM(A), SUM(`A-`), 
+    sql = """SELECT curriculum.curric_name, SUM(`A+`), SUM(A), SUM(`A-`),
                                             SUM(`B+`), SUM(A), SUM(`B-`),
                                             SUM(`C+`), SUM(A), SUM(`C-`),
                                             SUM(`D+`), SUM(A), SUM(`D-`),
-                                            SUM(F), SUM(I), SUM(W) 
+                                            SUM(F), SUM(I), SUM(W)
              FROM curriculum, curric_ops, curric_reqs, section, sec_grades
              WHERE (curriculum.curric_name = curric_ops.op_for
                OR curriculum.curric_name = curric_reqs.req_for)
@@ -138,7 +138,7 @@ def get_curric_distro(curric_name, times, mycursor):
     mycursor.execute(sql, times)
     return mycursor.fetchall()
 
-    
+
 
 #-------------------QUERY POINT #5-----------------------------------------------------------
 def get_curric_dash(curric_name,mycursor):
@@ -210,13 +210,13 @@ def get_creds_for_course_goals(curric_name,mycursor):
 	sql = """SELECT SUM(cred_hrs)
 			 FROM courses NATURAL JOIN course_goals
 			 WHERE goal_id IN (SELECT goal_id
-				  			   FROM goals 
+				  			   FROM goals
                   			   WHERE curric_name = %s)"""
 
 	vals = (curric_name,)
 
 	mycursor.execute(sql,vals)
-	return mycursor.fetchall()	
+	return mycursor.fetchall()
 
 def get_goal_hrs_given_curric(curric_name,mycusor):
 
@@ -224,8 +224,8 @@ def get_goal_hrs_given_curric(curric_name,mycusor):
  			 FROM goals
  			 WHERE curric_name = %s"""
 
- 	vals = (curric_name,)	
-	
+ 	vals = (curric_name,)
+
 
 def is_curric_goal_valid(curric_name,mycursor):
 

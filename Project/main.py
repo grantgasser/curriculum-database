@@ -55,8 +55,8 @@ def main():
     mycursor = mydb.cursor()
 
     #Make or remake curriculum database, then use it
-    mycursor.execute('DROP DATABASE IF EXISTS ' + SCHEMA_NAME)
-    mycursor.execute('CREATE DATABASE IF NOT EXISTS ' + SCHEMA_NAME)
+    #mycursor.execute('DROP DATABASE IF EXISTS ' + SCHEMA_NAME)
+    #mycursor.execute('CREATE DATABASE IF NOT EXISTS ' + SCHEMA_NAME)
 
     #Connect to schema (db) within server
     mydb = connect_db(password, SCHEMA_NAME)
@@ -82,11 +82,6 @@ def main():
 
     print('\nOpening GUI...\n')
     gui = g.MyGUI(mycursor, mydb)
-
-    #gui.show_tables()
-
-    #gui.create_input_menu_options()
-
 
 
 main()

@@ -49,7 +49,7 @@ def calcCat(target, mycursor):
                AND curric_ops.course_name = courses.course_name
                AND curriculum.curric_name = %s AND curriculum.person_id = %s
                GROUP BY courses.course_name"""
-    
+
     #Create a dictionary of all the subjects in the level 1 topics
     lvl1Subjects = {}
 
@@ -64,7 +64,7 @@ def calcCat(target, mycursor):
     #Get the units for each subject in lvl1 topics
     for M in lvl1Units:
         lvl1Subjects[M[0]] += M[1]
-    
+
     #Get the hours for the required courses
     mycursor.execute(reqSQL, vals)
     reqHrs = mycursor.fetchall()
@@ -98,12 +98,12 @@ def calcCat(target, mycursor):
         lvl2Subjects[S[0]] += S[1]
     for G in lvl2Units:
         lvl2Subjects[G[0]] += G[1]
-    
+
     leftReqs = {}
     for I in reqHrs:
         if I[0] in lvl1Subjects:
             leftReqs[I] = V-lvl1Subjects[I]
-    
+
     for I, V in lvl2Subjects:
         if I not in leftReqs:
             return 'Unsatisfactory'
@@ -111,7 +111,7 @@ def calcCat(target, mycursor):
     for I, V in lvl2Subjects:
         if (leftReqs[I]) < (lvl2Subjects[I]*(target['min_cover2']/100)):
             return 'Unsatisfactory'
-    
+
     #Find outif lvl 2 is fully covered by required courses or not
     l2Covered = True
     for I, V in lvl2Subjects:
@@ -149,5 +149,3 @@ def calcCat(target, mycursor):
             if (leftReqs[I]+opHrs[I]) < lvl2Subjects[I]:
                 return 'Basic'
         return 'Basic-Plus'
-
-

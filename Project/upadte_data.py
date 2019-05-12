@@ -72,10 +72,11 @@ def updateReqs(update_data, mycursor, mydb):
     sql = """UPDATE curric_reqs SET """+attr+""" = %s
              WHERE course_name = %s AND req_for = %s
              AND course_name NOT IN (SELECT course_name
-                                       FROM course_ops
+                                       FROM curric_ops
                                        WHERE course_name = %s)"""
 
-    vals = (update_data['New Value:'], update_data['course_name'], update_data['req_for'])
+    vals = (update_data['New Value:'], update_data['course_name'], update_data['req_for'],
+            update_data['course_name'])
 
     mycursor.execute(sql, vals)
 
@@ -101,7 +102,7 @@ def updateOps(update_data, mycursor, mydb):
     sql = """UPDATE curric_ops SET """+attr+""" = %s
              WHERE course_name = %s AND op_for = %s
                AND course_name NOT IN (SELECT course_name
-                                       FROM course_reqs
+                                       FROM curric_reqs
                                        WHERE course_name = %s)"""
 
     vals = (update_data['New Value:'], update_data['course_name'], update_data['op_for'],
@@ -321,4 +322,3 @@ def updateCourseTopic(update_data, mycursor, mydb):
     mydb.commit()
 
     print('\nThe coursetopic relationship has been edited.')
-

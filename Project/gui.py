@@ -238,7 +238,7 @@ class MyGUI:
         self.mid_course_curric_label_button = tk.Button(self.mid_frame, text='Go', font= 25, command=lambda:[self.course_curric_query(self.mid_course_curric_label_entry.get()), self.next_input()])
         self.mid_course_curric_label_button.place(relx=.52, rely=.8, relwidth = .06, relheight=.15)
         #################
-        
+
         #################
         # QUERY 5
         self.course_curric_attr = ['curric_name']
@@ -368,7 +368,7 @@ class MyGUI:
             self.insert_label_attr['text'] = 'Please enter ' + COURSE_TOPIC_ATTR[self.attr]
             table_dict = COURSE_TOPIC_ATTR
 
-            
+
 
 
         self.entry = tk.Entry(self.top_frame, font=25)
@@ -402,43 +402,51 @@ class MyGUI:
         else:
             #Insert data into db
             if table_name == 'curriculum':
-                ins.insert_into_curric(self.new_curric_data, self.cursor, self.db)
+                if int(self.new_curric_data['min_hours']) >= 0 and  int(self.new_curric_data['person_id']) >= 0 and  int(self.new_curric_data['min_cover2']) >= 0 and int(self.new_curric_data['min_cover3']) >= 0:
+                    ins.insert_into_curric(self.new_curric_data, self.cursor, self.db)
+                else:
+                    print('\nError! Please enter a positive value for person_id, min_hours, min_cover2, and min_cover3')
             elif table_name == 'courses':
-                ins.insert_into_courses(self.new_course_data, self.cursor, self.db)
+                if int(self.new_course_data['cred_hrs']) >= 0 and int(self.new_course_data['course_no']) >= 0:
+                    ins.insert_into_courses(self.new_course_data, self.cursor, self.db)
+                else:
+                    print('\nError! Please enter a positive value for course_no and cred_hrs')
             elif table_name == 'curric_reqs':
                 ins.insert_into_reqs(self.new_curric_reqs_data, self.cursor, self.db)
             elif table_name == 'curric_ops':
                 ins.insert_into_ops(self.new_curric_ops_data, self.cursor, self.db)
             elif table_name == 'topic':
-                ins.insert_into_topic(self.new_topic_data, self.cursor, self.db)
+                if int(self.new_topic_data['units']) >= 0 and int(self.new_topic_data['topic_id']) >= 0 and (int(self.new_topic_data['lvl']) >= 0 and int(self.new_topic_data['lvl']) < 4):
+                    ins.insert_into_topic(self.new_topic_data, self.cursor, self.db)
+                else:
+                    print('\nError! Please enter a positive value for units, topic_id and 0-3 for lvl')
             elif table_name == 'topic_curric':
-                ins.insert_into_topic_curric(self.new_topic_curric_data, self.cursor, self.db)
+                if int(self.new_topic_curric_data['topic_id']) >= 0:
+                    ins.insert_into_topic_curric(self.new_topic_curric_data, self.cursor, self.db)
+                else:
+                    print('\nError! Please enter a positive value for topic_id')
             elif table_name == 'goals':
-                ins.insert_into_goals(self.new_goals_data, self.cursor, self.db)
+                if int(self.new_goals_data['goal_id']) >= 0 and int(self.new_goals_data['goal_hrs']) >= 0:
+                    ins.insert_into_goals(self.new_goals_data, self.cursor, self.db)
+                else:
+                    print('\nError! Please enter a positive value for goal_id and goal_hrs')
             elif table_name == 'section':
-                ins.insert_into_section(self.new_section_data, self.cursor, self.db)
+                if int(self.new_section_data['section_id']) >= 0 and int(self.new_section_data['year']) >= 0 and int(self.new_section_data['num_stu']) >= 0:
+                    ins.insert_into_section(self.new_section_data, self.cursor, self.db)
+                else:
+                    print('\nError! Please enter a positive number for section_id, year, and num_stu')
             elif table_name == 'sec_grades':
-                ins.insert_into_sec_grades(self.new_sec_grades_data, self.cursor, self.db)
+                if sec_grades_pos:
+                    ins.insert_into_sec_grades(self.new_sec_grades_data, self.cursor, self.db)
+                else:
+                    print('\n All of the values need to be positive.')
             elif table_name == 'goal_grades':
-                ins.insert_into_goal_grades(self.new_goal_grades_data, self.cursor, self.db)
+                if goal_grades_pos:
+                    ins.insert_into_goal_grades(self.new_goal_grades_data, self.cursor, self.db)
+                else:
+                    print('\n All of the values need to be positive.')
             elif table_name == 'course_goals':
                 ins.insert_into_course_goals(self.new_course_goals_data, self.cursor, self.db)
-            elif table_name == 'course_topic':
-                ins.insert_into_course_topic(self.new_course_topic_data, self.cursor, self.db)
-
-            #RESET
-            self.update_curric_data = {}
-            self.update_course_data = {}
-            self.update_curric_reqs_data = {}
-            self.update_curric_ops_data = {}
-            self.update_topic_data = {}
-            self.update_topic_curric_data = {}
-            self.update_goals_data = {}
-            self.update_section_data = {}
-            self.update_course_goals_data = {}
-            self.update_sec_grades_data = {}
-            self.update_goal_grades_data = {}
-            self.update_course_topic_data = {}
 
 
 
@@ -720,11 +728,11 @@ class MyGUI:
                 print('Update data: ', self.update_course_data)
                 up.updateCourses(self.update_course_data, self.cursor, self.db)
             elif table_name == 'curric_reqs':
-                print('Update data: ', self.update_course_data)
-                up.updateReqs(self.update_course_data, self.cursor, self.db)
+                print('Update data: ', self.update_curric_reqs_data)
+                up.updateReqs(self.update_curric_reqs_data, self.cursor, self.db)
             elif table_name == 'curric_ops':
-                print('Update data: ', self.update_curric_data)
-                up.updateOps(self.update_curric_data, self.cursor, self.db)
+                print('Update data: ', self.update_curric_ops_data)
+                up.updateOps(self.update_curric_ops_data, self.cursor, self.db)
             elif table_name == 'topic':
                 print('Update data: ', self.update_topic_data)
                 up.updateTopic(self.update_topic_data, self.cursor, self.db)
@@ -745,7 +753,22 @@ class MyGUI:
                 up.updateGoalGrades(self.update_goal_grades_data, self.cursor, self.db)
             elif table_name == 'course_goals':
                 print('Update data: ', self.update_course_goals_data)
-                up.updateReqs(self.update_course_goals_data, self.cursor, self.db)
+                up.updateGoals(self.update_course_goals_data, self.cursor, self.db)
+
+
+            #RESET
+            self.update_curric_data = {}
+            self.update_course_data = {}
+            self.update_curric_reqs_data = {}
+            self.update_curric_ops_data = {}
+            self.update_topic_data = {}
+            self.update_topic_curric_data = {}
+            self.update_goals_data = {}
+            self.update_section_data = {}
+            self.update_course_goals_data = {}
+            self.update_sec_grades_data = {}
+            self.update_goal_grades_data = {}
+            self.update_course_topic_data = {}
 
 
             #AFTER UPDATE, RESET ENTRY AND BUTTON
